@@ -1,16 +1,15 @@
-# Labor Standards + Simulation Case Study
+# Labor Standards Story
 
-An interactive Streamlit portfolio case study showing why generic pallets-per-hour planning can misstate labor demand, and how labor standards, workload forecasting, and simulation improve decisions.
+A fixed, top-to-bottom Streamlit visual story explaining why generic PPH is not a labor standard, how MOST makes work measurable, and how a digital twin supports better labor, flow, and layout decisions.
 
-All values in the app are assumptions for demonstration purposes. They are not client results.
+The app intentionally contains no visitor controls, financial claims, or client results.
 
 ## Included
 
-- Interactive 3D warehouse layouts for current and redesigned operations
-- Generic PPH versus task-hours workload chart
-- Editable financial, staffing, and improvement assumptions
-- Before/after cost tables and scenario comparison
-- Explanation of the MOST to forecast to simulation workflow
+- Hero warehouse digital-twin visual
+- Short-route versus complex-route pallet infographic
+- MOST to standard library to workload forecast visual flow
+- Digital-twin scenarios for labor, work, and layout
 
 ## Run locally
 
@@ -43,7 +42,6 @@ streamlit run app.py
 
 ## Next improvements
 
-1. Replace illustrative assumptions with a sharper agreed business case.
-2. Refine the 3D warehouse to resemble the target sector.
-3. Add actual scenario output from Simio or a Python model.
-4. Add a contact section and professional background.
+1. Refine the warehouse visual and process language for the target sector.
+2. Add a real anonymized case study only after the numbers are validated.
+3. Add a contact section and professional background.

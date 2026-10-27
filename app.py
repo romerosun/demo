@@ -1,5 +1,7 @@
 """A fixed, top-to-bottom visual story about warehouse labor standards."""
 
+from pathlib import Path
+
 import streamlit as st
 
 
@@ -11,7 +13,7 @@ st.set_page_config(
 )
 
 
-WAREHOUSE_ANIMATION = r"""
+_LEGACY_WAREHOUSE_ANIMATION = r"""
 <!doctype html>
 <html>
 <head>
@@ -219,6 +221,10 @@ WAREHOUSE_ANIMATION = r"""
 </body>
 </html>
 """
+
+WAREHOUSE_ANIMATION = (Path(__file__).parent / "assets" / "warehouse_cycle.html").read_text(
+    encoding="utf-8"
+)
 
 
 st.markdown(

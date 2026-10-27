@@ -161,6 +161,10 @@ WAREHOUSE_ANIMATION = r"""
       ctx.restore();
     }
     function draw(time) {
+      // Keep this loop active even when the browser reports a reduced-motion
+      // preference. This is a short, explanatory product animation, and an
+      // inactive first frame makes the digital-twin idea read as a screenshot.
+      const motionTime = time * 2.75;
       ctx.clearRect(0,0,W,H);
       const gradient = ctx.createLinearGradient(0,0,0,H);
       gradient.addColorStop(0,"#1C4165"); gradient.addColorStop(.58,"#102A45"); gradient.addColorStop(1,"#0A1828");
@@ -185,12 +189,12 @@ WAREHOUSE_ANIMATION = r"""
         [[10,29],[24,29],[34,34],[46,34]]
       ];
       cartPaths.forEach((path, i) => {
-        const p = pointOnPath(path, time*.00007 + i*.34);
+        const p = pointOnPath(path, motionTime*.00007 + i*.34);
         pallet(p[0],p[1], i === 1 ? "#D59A53" : "#C98142");
       });
       const forkPath = [[7,31],[23,31],[40,27],[64,20],[85,14]];
-      const fp = pointOnPath(forkPath, time*.00004);
-      forklift(fp[0], fp[1], time*.005);
+      const fp = pointOnPath(forkPath, motionTime*.00004);
+      forklift(fp[0], fp[1], motionTime*.005);
 
       const workerPaths = [
         [[22,17],[38,17],[38,25],[22,25]],
@@ -198,8 +202,8 @@ WAREHOUSE_ANIMATION = r"""
         [[83,38],[91,38],[91,51],[83,51]]
       ];
       workerPaths.forEach((path, i) => {
-        const p = pointOnPath(path, time*.000026 + i*.27);
-        worker(p[0],p[1], time*.008+i);
+        const p = pointOnPath(path, motionTime*.000026 + i*.27);
+        worker(p[0],p[1], motionTime*.008+i);
       });
       ctx.save();
       ctx.fillStyle = "#A9C7E3"; ctx.font = "600 11px Inter, Arial";
@@ -208,9 +212,9 @@ WAREHOUSE_ANIMATION = r"""
       ctx.fillText("Storage", iso(72,10).x, iso(72,10).y-22);
       ctx.fillText("Outbound", iso(57,38).x, iso(57,38).y-20);
       ctx.restore();
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(draw);
+      requestAnimationFrame(draw);
     }
-    draw(0);
+    requestAnimationFrame(draw);
   </script>
 </body>
 </html>

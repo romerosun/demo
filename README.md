@@ -6,7 +6,7 @@ The app intentionally contains no visitor controls, financial claims, or client 
 
 ## Included
 
-- Hero warehouse digital-twin visual
+- Hero browser-based animated warehouse digital-twin visual
 - Short-route versus complex-route pallet infographic
 - MOST to standard library to workload forecast visual flow
 - Digital-twin scenarios for labor, work, and layout

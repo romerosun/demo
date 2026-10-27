@@ -1,7 +1,5 @@
 """A fixed, top-to-bottom visual story about warehouse labor standards."""
 
-from pathlib import Path
-
 import streamlit as st
 
 
@@ -13,8 +11,210 @@ st.set_page_config(
 )
 
 
-ASSET_DIR = Path(__file__).parent / "assets"
-WAREHOUSE_IMAGE = ASSET_DIR / "warehouse_digital_twin.png"
+WAREHOUSE_ANIMATION = r"""
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    html, body { margin: 0; background: #0C1C31; overflow: hidden; }
+    .stage {
+      position: relative;
+      height: 510px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 25%, #23486E 0%, #10233E 50%, #081523 100%);
+      box-shadow: 0 22px 48px rgba(23, 40, 70, 0.22);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    canvas { width: 100%; height: 100%; display: block; }
+    .badge {
+      position: absolute; top: 18px; left: 20px;
+      color: #C9DDFF; background: rgba(8, 25, 44, 0.68);
+      border: 1px solid rgba(148, 190, 255, 0.28);
+      border-radius: 999px; padding: 8px 12px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase;
+    }
+    .live {
+      position: absolute; top: 24px; right: 22px; color: #B9D6CA;
+      font-size: 10px; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .live::before {
+      content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      margin-right: 7px; background: #46D6A6; box-shadow: 0 0 0 4px rgba(70,214,166,.14);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    .caption {
+      position: absolute; left: 20px; bottom: 18px; max-width: 285px; color: #DCE9F8;
+      font-size: 12px; line-height: 1.45; text-shadow: 0 1px 6px rgba(0,0,0,.35);
+    }
+    .caption b { color: #FFFFFF; }
+    @keyframes pulse { 50% { transform: scale(.75); opacity: .55; } }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <canvas id="warehouse"></canvas>
+    <div class="badge">Illustrative digital twin</div>
+    <div class="live">Active flow</div>
+    <div class="caption"><b>Work is moving.</b><br>Without task-level standards, the labor behind each movement remains invisible.</div>
+  </div>
+  <script>
+    const canvas = document.getElementById("warehouse");
+    const ctx = canvas.getContext("2d");
+    let W = 0, H = 0, dpr = 1;
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width; H = rect.height;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function iso(x, y, z = 0) {
+      const sx = Math.min(W * 0.0072, 6.0);
+      const sy = sx * 0.47;
+      return { x: W * 0.51 + (x - y) * sx, y: H * 0.21 + (x + y) * sy - z * sy * 1.62 };
+    }
+    function line(a, b, color, width = 1, dash = []) {
+      ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); ctx.restore();
+    }
+    function polygon(points, fill, stroke = null) {
+      ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
+    }
+    function rack(x, y, w, h, height, color) {
+      const base = [iso(x,y), iso(x+w,y), iso(x+w,y+h), iso(x,y+h)];
+      const top = [iso(x,y,height), iso(x+w,y,height), iso(x+w,y+h,height), iso(x,y+h,height)];
+      polygon([base[1], base[2], top[2], top[1]], "#284866");
+      polygon([base[2], base[3], top[3], top[2]], "#1D3853");
+      polygon(top, color, "rgba(213,231,249,.25)");
+      for (let u = 0.18; u < 1; u += 0.18) {
+        line(iso(x + w * u, y, height + .1), iso(x + w * u, y + h, height + .1), "rgba(233,243,252,.16)");
+      }
+    }
+    function tabletop(x, y, w, h) {
+      const p = [iso(x,y,2.2), iso(x+w,y,2.2), iso(x+w,y+h,2.2), iso(x,y+h,2.2)];
+      polygon(p, "#8E663E", "rgba(255,224,180,.28)");
+      for (const c of [iso(x+.5,y+.5), iso(x+w-.5,y+.5), iso(x+w-.5,y+h-.5), iso(x+.5,y+h-.5)]) {
+        line(c, {x:c.x, y:c.y + 17}, "#31506D", 2);
+      }
+    }
+    function conveyor(points) {
+      for (let i = 1; i < points.length; i++) {
+        const a = iso(points[i-1][0], points[i-1][1], 1.6);
+        const b = iso(points[i][0], points[i][1], 1.6);
+        line(a, b, "#527A9E", 12);
+        line(a, b, "#A9C4DA", 3);
+      }
+    }
+    function pointOnPath(points, t) {
+      const segments = [];
+      let total = 0;
+      for (let i = 1; i < points.length; i++) {
+        const dx = points[i][0] - points[i-1][0], dy = points[i][1] - points[i-1][1];
+        const len = Math.hypot(dx, dy); segments.push(len); total += len;
+      }
+      let target = (t % 1) * total;
+      for (let i = 0; i < segments.length; i++) {
+        if (target <= segments[i]) {
+          const f = target / segments[i];
+          return [points[i][0] + (points[i+1][0]-points[i][0])*f, points[i][1] + (points[i+1][1]-points[i][1])*f];
+        }
+        target -= segments[i];
+      }
+      return points[points.length - 1];
+    }
+    function pallet(x, y, color = "#D8914B") {
+      const a = iso(x,y,1.5), b = iso(x+3,y,1.5), c = iso(x+3,y+2,1.5), d = iso(x,y+2,1.5);
+      const up = 8;
+      polygon([{x:a.x,y:a.y-up},{x:b.x,y:b.y-up},{x:c.x,y:c.y-up},{x:d.x,y:d.y-up}], color, "rgba(255,230,190,.35)");
+      polygon([{x:c.x,y:c.y-up},{x:d.x,y:d.y-up},d,c], "#9D5C2B");
+      polygon([{x:b.x,y:b.y-up},{x:c.x,y:c.y-up},c,b], "#B86E35");
+    }
+    function worker(x, y, phase) {
+      const p = iso(x,y,0), bob = Math.sin(phase) * 1.2;
+      ctx.save();
+      ctx.fillStyle = "rgba(4,14,25,.25)"; ctx.beginPath(); ctx.ellipse(p.x, p.y+7, 6, 2.4, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#F5D1B5"; ctx.beginPath(); ctx.arc(p.x, p.y-18+bob, 4, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#45D7A6"; ctx.fillRect(p.x-4, p.y-14+bob, 8, 11);
+      ctx.strokeStyle = "#CDE7F5"; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(p.x-2, p.y-2+bob); ctx.lineTo(p.x-4, p.y+5); ctx.moveTo(p.x+2, p.y-2+bob); ctx.lineTo(p.x+4, p.y+5); ctx.stroke();
+      ctx.restore();
+    }
+    function forklift(x, y, phase) {
+      const p = iso(x,y,0), sway = Math.sin(phase) * 0.7;
+      ctx.save();
+      ctx.translate(p.x, p.y+sway);
+      ctx.fillStyle = "rgba(3,13,24,.25)"; ctx.beginPath(); ctx.ellipse(0,8,13,4,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#F3C84E"; ctx.fillRect(-11,-7,17,10);
+      ctx.fillStyle = "#162E47"; ctx.fillRect(-1,-16,7,10); ctx.fillRect(7,-19,2,22);
+      ctx.fillStyle = "#27394C"; ctx.beginPath(); ctx.arc(-7,5,4,0,Math.PI*2); ctx.arc(5,5,4,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle = "#BDD2E5"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(9,1); ctx.lineTo(18,1); ctx.moveTo(9,4); ctx.lineTo(18,4); ctx.stroke();
+      ctx.restore();
+    }
+    function draw(time) {
+      ctx.clearRect(0,0,W,H);
+      const gradient = ctx.createLinearGradient(0,0,0,H);
+      gradient.addColorStop(0,"#1C4165"); gradient.addColorStop(.58,"#102A45"); gradient.addColorStop(1,"#0A1828");
+      ctx.fillStyle = gradient; ctx.fillRect(0,0,W,H);
+
+      const floor = [iso(0,0), iso(100,0), iso(100,60), iso(0,60)];
+      polygon(floor, "#163852", "rgba(173,207,240,.32)");
+      for (let x = 0; x <= 100; x += 10) line(iso(x,0), iso(x,60), "rgba(171,209,241,.11)");
+      for (let y = 0; y <= 60; y += 10) line(iso(0,y), iso(100,y), "rgba(171,209,241,.11)");
+
+      polygon([iso(6,8), iso(36,8), iso(36,29), iso(6,29)], "rgba(68,214,166,.10)");
+      polygon([iso(45,5), iso(90,5), iso(90,27), iso(45,27)], "rgba(77,124,254,.10)");
+      for (let x = 48; x <= 82; x += 9) rack(x, 9, 5.5, 28, 9, "#466E92");
+      for (let x = 11; x <= 32; x += 7) rack(x, 36, 4.5, 17, 7, "#567C9B");
+      tabletop(21,18,18,7); tabletop(43,37,18,7);
+      conveyor([[9,12],[27,12],[27,22],[45,22],[45,32],[70,32]]);
+      conveyor([[17,47],[35,47],[35,39],[49,39]]);
+
+      const cartPaths = [
+        [[9,12],[27,12],[27,22],[45,22],[45,32],[70,32]],
+        [[17,47],[35,47],[35,39],[49,39]],
+        [[10,29],[24,29],[34,34],[46,34]]
+      ];
+      cartPaths.forEach((path, i) => {
+        const p = pointOnPath(path, time*.00007 + i*.34);
+        pallet(p[0],p[1], i === 1 ? "#D59A53" : "#C98142");
+      });
+      const forkPath = [[7,31],[23,31],[40,27],[64,20],[85,14]];
+      const fp = pointOnPath(forkPath, time*.00004);
+      forklift(fp[0], fp[1], time*.005);
+
+      const workerPaths = [
+        [[22,17],[38,17],[38,25],[22,25]],
+        [[42,43],[62,43],[62,49],[42,49]],
+        [[83,38],[91,38],[91,51],[83,51]]
+      ];
+      workerPaths.forEach((path, i) => {
+        const p = pointOnPath(path, time*.000026 + i*.27);
+        worker(p[0],p[1], time*.008+i);
+      });
+      ctx.save();
+      ctx.fillStyle = "#A9C7E3"; ctx.font = "600 11px Inter, Arial";
+      ctx.fillText("Inbound", iso(5,7).x, iso(5,7).y-14);
+      ctx.fillText("Workstations", iso(28,19).x, iso(28,19).y-19);
+      ctx.fillText("Storage", iso(72,10).x, iso(72,10).y-22);
+      ctx.fillText("Outbound", iso(57,38).x, iso(57,38).y-20);
+      ctx.restore();
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(draw);
+    }
+    draw(0);
+  </script>
+</body>
+</html>
+"""
 
 
 st.markdown(
@@ -298,11 +498,8 @@ with hero_copy:
         unsafe_allow_html=True,
     )
 with hero_visual:
-    if WAREHOUSE_IMAGE.exists():
-        st.image(str(WAREHOUSE_IMAGE), width="stretch")
-    else:
-        st.info("Warehouse digital-twin visual will appear here.")
-    st.caption("Illustrative warehouse digital-twin environment")
+    st.iframe(WAREHOUSE_ANIMATION, height=510, width="stretch", alt="Animated warehouse digital twin")
+    st.caption("Illustrative animated digital-twin environment")
 
 
 st.markdown('<div class="story-rule"></div>', unsafe_allow_html=True)

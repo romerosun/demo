@@ -869,9 +869,10 @@ HERO_IMAGE = base64.b64decode(
     "MbAAAA=="
 )
 
-# The local asset is preferred; the embedded image keeps the app renderable if
+# The local assets are preferred; the embedded image keeps the app renderable if
 # only app.py is deployed during an early GitHub/Streamlit update.
-SIMIO_HERO_PATH = Path(__file__).parent / "assets" / "warehouse_hero_simio_style.webp"
+SIMIO_HERO_PATH = Path(__file__).parent / "assets" / "warehouse_hero_simio_crisp.png"
+FLOORPLAN_PATH = Path(__file__).parent / "assets" / "warehouse_floorplan_2d.png"
 
 _LEGACY_WAREHOUSE_ANIMATION = r"""
 <!doctype html>
@@ -2361,7 +2362,7 @@ st.markdown(
     """
     <style>
       .landing-kicker { color:#3B67E5; font-size:.74rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; margin:0 0 .85rem; }
-      .landing-title { max-width:900px; color:#07111F; font-size:clamp(3rem,6vw,5.75rem); font-weight:790; letter-spacing:-.07em; line-height:.94; margin:0 0 1.15rem; }
+      .landing-title { max-width:900px; color:#07111F !important; font-size:clamp(3rem,6vw,5.75rem); font-weight:790; letter-spacing:-.07em; line-height:.94; margin:0 0 1.15rem; }
       .landing-copy { max-width:760px; color:#52657A; font-size:1.12rem; line-height:1.6; margin:0 0 1.45rem; }
       .outcome-bar { display:flex; flex-wrap:wrap; gap:.55rem; margin:1.15rem 0 5rem; }
       .outcome-bar span { color:#274462; background:#FFF; border:1px solid #D8E4F1; border-radius:999px; font-size:.78rem; font-weight:760; padding:.48rem .78rem; }
@@ -2404,6 +2405,8 @@ st.markdown(
       .action-card:nth-child(2) .action-icon { background:#34A783; } .action-card:nth-child(3) .action-icon { background:#E88757; }
       .action-card h3 { color:#15314A; font-size:1rem; margin:.85rem 0 .4rem; } .action-card p { color:#61768A; font-size:.85rem; line-height:1.45; margin:0; }
       .closing-line { max-width:780px; color:#0B2035; font-size:clamp(1.6rem,3.2vw,2.65rem); font-weight:760; line-height:1.08; letter-spacing:-.05em; margin:5rem 0 1rem; }
+      [data-testid="stImage"] img { width:100% !important; height:auto !important; max-height:none !important; object-fit:contain !important; image-rendering:auto; }
+      [data-testid="stVerticalBlockBorderWrapper"] { background:#FFF; border:1px solid #D8E3ED !important; border-radius:22px !important; box-shadow:0 18px 40px rgba(31,57,85,.08); }
       @media (max-width:800px) { .twin-process,.action-grid,.insight-body { grid-template-columns:1fr; } .process-card:not(:last-child)::after { display:none; } .floor-view { min-height:270px; } .insight-head { align-items:flex-start; } }
     </style>
     """,
@@ -2416,7 +2419,11 @@ st.markdown(
     '<p class="landing-copy">A digital twin shows where work is being done, where bottlenecks build, and where delays begin. It helps you schedule and balance the operation so the right person is in the right place at the right time.</p>',
     unsafe_allow_html=True,
 )
-st.image(str(SIMIO_HERO_PATH) if SIMIO_HERO_PATH.exists() else HERO_IMAGE, use_container_width=True)
+st.image(
+    str(SIMIO_HERO_PATH) if SIMIO_HERO_PATH.exists() else HERO_IMAGE,
+    use_container_width=True,
+    output_format="PNG",
+)
 st.markdown('<div class="outcome-bar"><span>Labor visibility</span><span>Throughput insight</span><span>Operational flexibility</span></div>', unsafe_allow_html=True)
 
 st.markdown('<section class="landing-section"><div class="landing-label">How it works</div><h2 class="landing-heading">From warehouse floor plan to a trusted digital twin.</h2><p class="landing-section-copy">We combine the warehouse floor plan with available operating data, then build and validate a model against the real operation.</p></section>', unsafe_allow_html=True)
@@ -2432,27 +2439,28 @@ st.markdown(
 )
 
 st.markdown('<section class="landing-section"><div class="landing-label">See the waste</div><h2 class="landing-heading">Make delay, travel, and imbalance visible.</h2><p class="landing-section-copy">The twin turns day-to-day movement into a clear view of where time and capacity are being lost.</p></section>', unsafe_allow_html=True)
-st.markdown(
-    """
-    <div class="insight-board">
-      <div class="insight-head"><div><div class="insight-eyebrow">Operational view</div><div class="insight-title">Where the operation is slowing down</div></div><div class="illustrative-tag">Illustrative dashboard</div></div>
-      <div class="insight-body">
-        <div class="floor-view">
-          <div class="dock-bays"></div><div class="floor-zone receiving">Receiving</div><div class="floor-zone storage">Reserve storage</div><div class="floor-zone shipping">Shipping</div>
-          <div class="rack-field"><div class="rack-row"></div><div class="rack-row"></div><div class="rack-row"></div><div class="rack-row"></div><div class="rack-row"></div></div>
-          <div class="route one"></div><div class="route two"></div><div class="route three"></div><div class="heat one"></div><div class="heat two"></div><div class="heat three"></div>
-          <div class="floor-pin queue"><i></i>Queue build-up</div><div class="floor-pin travel"><i></i>Excess travel</div><div class="floor-pin delay"><i></i>Delay point</div>
-        </div>
-        <div class="insight-stack">
-          <div class="insight-card"><small>Heat map</small><strong>Where work concentrates</strong><span>See high-activity and congested areas across the floor.</span></div>
-          <div class="insight-card"><small>Delays</small><strong>Where flow breaks down</strong><span>Trace queues and bottlenecks back to their source.</span></div>
-          <div class="insight-card"><small>Labor balance</small><strong>Where capacity is misaligned</strong><span>Compare the work arriving with the people and equipment available.</span></div>
-        </div>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+with st.container(border=True):
+    st.markdown(
+        '<div class="insight-head"><div><div class="insight-eyebrow">Operational view</div><div class="insight-title">Where the operation is slowing down</div></div><div class="illustrative-tag">Illustrative dashboard</div></div>',
+        unsafe_allow_html=True,
+    )
+    map_column, insight_column = st.columns([1.35, 0.65], gap="medium")
+    with map_column:
+        if FLOORPLAN_PATH.exists():
+            st.image(str(FLOORPLAN_PATH), use_container_width=True, output_format="PNG")
+        else:
+            st.markdown('<div class="floor-view"></div>', unsafe_allow_html=True)
+    with insight_column:
+        st.markdown(
+            """
+            <div class="insight-stack">
+              <div class="insight-card"><small>Heat map</small><strong>Where work concentrates</strong><span>See high-activity and congested areas across the floor.</span></div>
+              <div class="insight-card"><small>Delays</small><strong>Where flow breaks down</strong><span>Trace queues and bottlenecks back to their source.</span></div>
+              <div class="insight-card"><small>Labor balance</small><strong>Where capacity is misaligned</strong><span>Compare the work arriving with the people and equipment available.</span></div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 st.markdown('<section class="landing-section"><div class="landing-label">Plan of action</div><h2 class="landing-heading">Use the model to improve the real operation.</h2><p class="landing-section-copy">Test decisions before putting them on the floor, then turn the result into a practical operating plan.</p></section>', unsafe_allow_html=True)
 st.markdown(

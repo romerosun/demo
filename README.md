@@ -6,9 +6,9 @@ The app intentionally contains no visitor controls, financial claims, or client 
 
 ## Included
 
-- Simio-style warehouse hero visual
+- Crisp Simio-style warehouse hero visual
 - Simple map → model → validate explanation
-- Clean operational dashboard illustration with heat, delay, and labor-balance views
+- 2D warehouse floor-plan dashboard with heat, delay, and labor-balance views
 - Practical action areas: scheduling, scaling, and cost comparison
 
 ## Run locally

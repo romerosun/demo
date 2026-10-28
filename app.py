@@ -571,6 +571,410 @@ WAREHOUSE_ANIMATION = r"""
 </html>
 """
 
+PEOPLE_PALLET_ANIMATION = r"""
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    html, body { margin: 0; background: #0C1C31; overflow: hidden; }
+    .stage {
+      height: 510px; position: relative; overflow: hidden; border-radius: 22px;
+      background: radial-gradient(circle at 46% 17%, #365979 0%, #162C47 52%, #0A1727 100%);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    svg { width: 100%; height: 100%; display: block; }
+    .badge {
+      position:absolute; top:18px; left:20px; color:#C9DDFF; background:rgba(8,25,44,.68);
+      border:1px solid rgba(148,190,255,.28); border-radius:999px; padding:8px 12px;
+      font-size:10px; font-weight:800; letter-spacing:.11em; text-transform:uppercase;
+    }
+    .caption {
+      position:absolute; left:20px; bottom:18px; max-width:285px; color:#DCE9F8;
+      font-size:12px; line-height:1.45; text-shadow:0 1px 6px rgba(0,0,0,.35);
+    }
+    .caption b { color:#FFFFFF; }
+    .mover { animation: carry 5.5s ease-in-out infinite; }
+    .pulse { animation: fade 5.5s ease-in-out infinite; }
+    @keyframes carry {
+      0%, 8% { transform: translate(0px, 0px); opacity: 1; }
+      62%, 78% { transform: translate(255px, -108px); opacity: 1; }
+      100% { transform: translate(255px, -108px); opacity: 0; }
+    }
+    @keyframes fade {
+      0%, 58% { opacity:.18; } 70%, 86% { opacity:1; } 100% { opacity:.18; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg viewBox="0 0 780 510" aria-label="Workers moving pallets through a staging area">
+      <defs>
+        <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+          <path d="M24 0H0V24" fill="none" stroke="rgba(177,208,235,.16)" stroke-width="1"/>
+        </pattern>
+        <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <polygon points="76,375 431,186 709,331 342,491" fill="#243D59" stroke="#7195B7" stroke-width="2"/>
+      <polygon points="76,375 431,186 709,331 342,491" fill="url(#grid)" opacity=".72"/>
+      <g opacity=".93">
+        <polygon points="477,197 635,280 615,291 457,208" fill="#7C9BB7"/>
+        <polygon points="457,208 615,291 615,356 457,273" fill="#426783"/>
+        <g stroke="#DDEAF5" stroke-width="3" opacity=".72">
+          <path d="M477 207L477 283M508 223L508 299M539 239L539 315M570 255L570 331M601 271L601 347"/>
+          <path d="M466 234L624 317M466 259L624 342"/>
+        </g>
+      </g>
+      <path d="M176 394 C273 366 357 326 459 264" fill="none" stroke="#4DD3A2" stroke-width="8" stroke-linecap="round" stroke-dasharray="10 11" filter="url(#glow)"/>
+      <g class="mover">
+        <ellipse cx="188" cy="399" rx="24" ry="9" fill="rgba(0,0,0,.30)"/>
+        <circle cx="183" cy="352" r="12" fill="#F2C7A7"/>
+        <path d="M172 348H194" stroke="#EFF5F8" stroke-width="6"/>
+        <rect x="171" y="365" width="24" height="35" rx="5" fill="#42B883"/>
+        <path d="M178 399L174 417M189 399L194 415" stroke="#203544" stroke-width="5" stroke-linecap="round"/>
+        <rect x="204" y="378" width="43" height="27" rx="3" fill="#D9A064" stroke="#8F5B34" stroke-width="2"/>
+        <path d="M218 378V405M232 378V405M204 391H247" stroke="#B87846" stroke-width="1.5"/>
+      </g>
+      <g>
+        <ellipse cx="491" cy="259" rx="21" ry="8" fill="rgba(0,0,0,.28)"/>
+        <circle cx="489" cy="216" r="11" fill="#F2C7A7"/>
+        <path d="M479 211H499" stroke="#EFF5F8" stroke-width="5"/>
+        <rect x="478" y="228" width="22" height="32" rx="5" fill="#E4D833"/>
+        <path d="M484 260L480 276M494 260L499 275" stroke="#203544" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <g>
+        <ellipse cx="305" cy="336" rx="21" ry="8" fill="rgba(0,0,0,.28)"/>
+        <circle cx="303" cy="293" r="11" fill="#F2C7A7"/>
+        <path d="M293 288H313" stroke="#EFF5F8" stroke-width="5"/>
+        <rect x="292" y="305" width="22" height="32" rx="5" fill="#D9655A"/>
+        <path d="M298 337L294 352M308 337L313 351" stroke="#203544" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <g class="pulse">
+        <circle cx="468" cy="269" r="21" fill="none" stroke="#4DD3A2" stroke-width="3"/>
+        <circle cx="468" cy="269" r="32" fill="none" stroke="rgba(77,211,162,.45)" stroke-width="2"/>
+      </g>
+    </svg>
+    <div class="badge">Illustrative manual flow</div>
+    <div class="caption"><b>People move work too.</b><br>Every handoff, walk, scan, and placement becomes a measurable part of the work.</div>
+  </div>
+</body>
+</html>
+"""
+
+
+COVER_FLOOR = r"""
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    html, body { margin: 0; background: #e9edf2; overflow: hidden; }
+    .stage {
+      position: relative;
+      height: 580px;
+      overflow: hidden;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #f6f8fb 0%, #e5eaf0 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      box-shadow: 0 20px 50px rgba(20, 43, 70, .15);
+    }
+    canvas { display: block; width: 100%; height: 100%; }
+    .chip {
+      position: absolute; top: 18px; left: 20px;
+      padding: 8px 12px; border: 1px solid rgba(32, 61, 91, .18);
+      border-radius: 999px; color: #274462; background: rgba(255,255,255,.78);
+      font-size: 10px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase;
+    }
+    .note {
+      position: absolute; right: 20px; bottom: 17px; color: #536d85;
+      font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <canvas id="cover-floor"></canvas>
+    <div class="chip">Grid-based facility foundation</div>
+    <div class="note">90 m × 52 m • 1 m planning grid</div>
+  </div>
+  <script>
+    const canvas = document.getElementById("cover-floor");
+    const ctx = canvas.getContext("2d");
+    const BASE_W = 960;
+    const BASE_H = 580;
+    const FACILITY_W = 90;
+    const FACILITY_D = 52;
+    let width = 0, height = 0, dpr = 1;
+
+    function resize() {
+      const box = canvas.getBoundingClientRect();
+      width = Math.max(1, box.width);
+      height = Math.max(1, box.height);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      draw();
+    }
+    window.addEventListener("resize", resize);
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(document.body);
+
+    function poly(points, fill, stroke, lineWidth = 1) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lineWidth; ctx.stroke(); }
+    }
+    function line(a, b, color, lineWidth = 1, dash = []) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash(dash);
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+      ctx.restore();
+    }
+    function text(value, x, y, size, color, weight = 700, align = "left") {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.font = weight + " " + size + "px Inter, Arial, sans-serif";
+      ctx.textAlign = align;
+      ctx.fillText(value, x, y);
+      ctx.restore();
+    }
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      const scale = Math.min(width / BASE_W, height / BASE_H);
+      const ox = (width - BASE_W * scale) / 2;
+      const oy = (height - BASE_H * scale) / 2;
+      ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
+
+      const bg = ctx.createLinearGradient(0, 0, 0, BASE_H);
+      bg.addColorStop(0, "#f7f9fc");
+      bg.addColorStop(1, "#e4eaf1");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, BASE_W, BASE_H);
+
+      const sx = 5.55;
+      const sy = 2.72;
+      const origin = { x: 484, y: 76 };
+      const iso = (x, y, z = 0) => ({
+        x: origin.x + (x - y) * sx,
+        y: origin.y + (x + y) * sy - z * 12,
+      });
+      const hash = (a, b, c) => {
+        const n = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453;
+        return n - Math.floor(n);
+      };
+      function cuboid(x, y, w, depth, z, h, top, front, side, stroke = null) {
+        const a = iso(x, y, z), b = iso(x + w, y, z), c = iso(x + w, y + depth, z), d = iso(x, y + depth, z);
+        const ta = iso(x, y, z + h), tb = iso(x + w, y, z + h), tc = iso(x + w, y + depth, z + h), td = iso(x, y + depth, z + h);
+        poly([b, c, tc, tb], side, stroke);
+        poly([c, d, td, tc], front, stroke);
+        poly([ta, tb, tc, td], top, stroke);
+      }
+      function pallet(x, y, w, depth, z, tint = "#c98a48") {
+        cuboid(x, y, w, depth, z, .14, "#c8955a", "#8d5a30", "#a56f3d", "rgba(83,57,32,.35)");
+        cuboid(x + .10, y + .10, w - .20, depth - .20, z + .14, .96, tint, "#9f6433", "#b8773e", "rgba(255,242,212,.32)");
+        const split = iso(x + w / 2, y + .10, z + 1.10);
+        const splitEnd = iso(x + w / 2, y + depth - .10, z + 1.10);
+        const cross = iso(x + .10, y + depth / 2, z + 1.10);
+        const crossEnd = iso(x + w - .10, y + depth / 2, z + 1.10);
+        line(split, splitEnd, "rgba(91,52,29,.32)", .7);
+        line(cross, crossEnd, "rgba(91,52,29,.24)", .7);
+      }
+      function rackRow(x, y, length, depth, rowIndex) {
+        const bay = 4;
+        const bays = Math.floor(length / bay);
+        const levels = [.14, 2.65, 5.16];
+        const beams = [1.48, 3.99, 6.50];
+        const occupancy = [.56, .73, .47, .64, .36, .68][rowIndex % 6];
+
+        levels.forEach((z, level) => {
+          for (let i = 0; i < bays; i++) {
+            if (hash(i, level, rowIndex) < occupancy) {
+              const tint = hash(i + 2, level, rowIndex) > .32 ? "#cd914c" : "#d9dce1";
+              pallet(x + i * bay + .28, y + .34, 2.34, depth - .68, z, tint);
+            }
+          }
+        });
+        beams.forEach((z) => {
+          cuboid(x, y + .10, length, .18, z, .17, "#f4a33e", "#b95f1f", "#d87f2c");
+          cuboid(x, y + depth - .28, length, .18, z, .17, "#f4a33e", "#b95f1f", "#d87f2c");
+        });
+        for (let i = 0; i <= bays; i++) {
+          const px = x + i * bay - .08;
+          cuboid(px, y + .04, .18, .18, 0, 7.55, "#7199ba", "#1d4f78", "#3a77a7");
+          cuboid(px, y + depth - .22, .18, .18, 0, 7.55, "#7199ba", "#1d4f78", "#3a77a7");
+        }
+      }
+      function conveyor(x, y, length, depth = 1.25) {
+        cuboid(x, y, length, depth, .30, .22, "#5e8bb0", "#245578", "#3d7099");
+        for (let u = .4; u < length; u += .8) {
+          line(iso(x + u, y + .08, .54), iso(x + u, y + depth - .08, .54), "rgba(230,242,251,.72)", .7);
+        }
+        [x + .45, x + length - .55].forEach((px) => {
+          cuboid(px, y + .18, .14, .14, 0, .34, "#547287", "#294a62", "#3b5c74");
+          cuboid(px, y + depth - .32, .14, .14, 0, .34, "#547287", "#294a62", "#3b5c74");
+        });
+      }
+      function worker(x, y) {
+        const feet = iso(x, y, .06);
+        const torso = iso(x, y, 1.02);
+        const head = iso(x, y, 1.60);
+        ctx.save();
+        ctx.strokeStyle = "#263847";
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.moveTo(feet.x - 2.5, feet.y); ctx.lineTo(torso.x - 1.5, torso.y + 7);
+        ctx.moveTo(feet.x + 2.5, feet.y); ctx.lineTo(torso.x + 1.5, torso.y + 7);
+        ctx.stroke();
+        ctx.fillStyle = "#42b883";
+        ctx.fillRect(torso.x - 3.2, torso.y + 1, 6.4, 8.4);
+        ctx.fillStyle = "#f0caab";
+        ctx.beginPath(); ctx.arc(head.x, head.y + 2.7, 3.1, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#f7f4e8";
+        ctx.fillRect(head.x - 3.4, head.y, 6.8, 2.0);
+        ctx.restore();
+      }
+      function forklift(x, y, kind = "counterbalance") {
+        const reach = kind === "reach";
+        const body = reach ? "#efbb3d" : "#f3c84e";
+        const shadow = iso(x + 1.05, y + .58, .01);
+        ctx.save();
+        ctx.fillStyle = "rgba(29, 42, 53, .18)";
+        ctx.beginPath(); ctx.ellipse(shadow.x, shadow.y + 4, 12, 4.4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+        cuboid(x, y, 2.15, 1.16, .13, .55, body, "#ad761f", "#cf992b");
+        cuboid(x + .42, y + .16, .96, .82, .68, .88, "#39566c", "#173348", "#26465d");
+        cuboid(x + .62, y + .28, .55, .52, 1.56, .10, "#ecf3f7", "#9bb2c0", "#c9d9e1");
+        cuboid(x + 1.80, y + .43, .15, .24, .48, reach ? 3.70 : 2.75, "#29465a", "#142a3b", "#1f3d51");
+        cuboid(x + 1.92, y + .48, .95, .10, .50, .08, "#cbdce6", "#849ba9", "#aebfca");
+        const w1 = iso(x + .40, y + .16, .11);
+        const w2 = iso(x + 1.75, y + .96, .11);
+        ctx.save();
+        ctx.fillStyle = "#263543";
+        [w1, w2].forEach((p) => { ctx.beginPath(); ctx.arc(p.x, p.y + 2, 3.7, 0, Math.PI * 2); ctx.fill(); });
+        ctx.restore();
+      }
+      function palletJack(x, y) {
+        cuboid(x, y, 1.30, .68, .10, .18, "#f1b844", "#a97323", "#d29431");
+        cuboid(x + 1.10, y + .26, .13, .14, .18, 1.10, "#516a7b", "#263e50", "#3c586b");
+      }
+      function dock(x) {
+        // Trailer, dock portal, and yellow bollards are kept square to the dock grid.
+        cuboid(x + .27, 2.02, 2.10, 2.16, .14, 1.28, "#f8fbfd", "#aebec9", "#d9e3e9", "rgba(74, 98, 116, .22)");
+        cuboid(x + .42, 3.94, 1.78, .16, .10, .28, "#586a78", "#283d4d", "#425a6c");
+        cuboid(x, .75, 2.65, .28, 0, 3.10, "#81909d", "#596875", "#6e7e8b");
+        cuboid(x + .20, 1.06, 2.25, .22, .20, 2.35, "#263e54", "#15273a", "#1f3448");
+        [.08, 2.40].forEach((offset) => cuboid(x + offset, 1.48, .13, .13, 0, .72, "#ffd22e", "#c69d08", "#e0b512"));
+      }
+      const floor = [iso(0, 0), iso(FACILITY_W, 0), iso(FACILITY_W, FACILITY_D), iso(0, FACILITY_D)];
+
+      ctx.save();
+      ctx.shadowColor = "rgba(33, 56, 79, .18)";
+      ctx.shadowBlur = 22;
+      ctx.shadowOffsetY = 14;
+      poly(floor, "#dfe5eb", "#8ba0b1", 1.5);
+      ctx.restore();
+
+      for (let x = 0; x <= FACILITY_W; x++) {
+        const strong = x % 10 === 0;
+        line(iso(x, 0), iso(x, FACILITY_D), strong ? "rgba(92,119,141,.32)" : "rgba(111,136,156,.13)", strong ? 1.15 : .55);
+      }
+      for (let y = 0; y <= FACILITY_D; y++) {
+        const strong = y % 10 === 0;
+        line(iso(0, y), iso(FACILITY_W, y), strong ? "rgba(92,119,141,.32)" : "rgba(111,136,156,.13)", strong ? 1.15 : .55);
+      }
+
+      const outline = [iso(0, 0), iso(FACILITY_W, 0), iso(FACILITY_W, FACILITY_D), iso(0, FACILITY_D)];
+      poly(outline, null, "#516f86", 1.8);
+
+      // A clean dock-wall datum gives the top edge the same warehouse context as the reference view.
+      cuboid(1.4, .20, 28.2, .38, 0, 6.2, "#8c98a4", "#596774", "#73818e");
+
+      function zone(x, y, w, d, fill, border) {
+        poly([iso(x,y), iso(x+w,y), iso(x+w,y+d), iso(x,y+d)], fill, border, 1.3);
+      }
+      function footprint(x, y, w, d) {
+        const p = [iso(x,y), iso(x+w,y), iso(x+w,y+d), iso(x,y+d)];
+        poly(p, "rgba(79, 116, 149, .10)", "rgba(64, 100, 133, .64)", 1.25);
+        const midA = iso(x, y + d / 2);
+        const midB = iso(x + w, y + d / 2);
+        line(midA, midB, "rgba(64, 100, 133, .26)", 1, [4, 4]);
+      }
+
+      zone(4, 31, 27, 16, "rgba(59, 130, 246, .035)", "rgba(59, 130, 246, .25)");
+      zone(35, 7, 50, 41, "rgba(15, 118, 110, .018)", "rgba(15, 118, 110, .23)");
+      zone(2, 5, 26, 18, "rgba(245, 158, 11, .025)", "rgba(245, 158, 11, .25)");
+
+      // Seven long, parallel selective-rack rows: 2.2 m rack depth and 3.7 m working aisles.
+      const rackStartX = 36;
+      const rackLength = 48;
+      const rackDepth = 2.2;
+      const rowY = [7.5, 13.4, 19.3, 25.2, 31.1, 37.0, 42.9];
+      rowY.forEach((y) => footprint(rackStartX, y, rackLength, rackDepth));
+
+      // Cross aisle and dock-facing staging alignment.
+      line(iso(32, 5), iso(32, 48), "rgba(245, 158, 11, .84)", 2.4, [8, 6]);
+      line(iso(35, 5), iso(85, 5), "rgba(245, 158, 11, .84)", 2.4, [8, 6]);
+      line(iso(35, 48), iso(85, 48), "rgba(245, 158, 11, .84)", 2.4, [8, 6]);
+
+      // Yellow travel and safety demarcation, visible in every clear aisle.
+      [5.7, 11.6, 17.5, 23.4, 29.3, 35.2, 41.1, 46.2].forEach((y) => {
+        line(iso(34, y), iso(85, y), "rgba(250, 202, 21, .92)", 1.55, [7, 5]);
+      });
+      line(iso(4, 30), iso(31, 30), "rgba(250, 202, 21, .92)", 1.55);
+      line(iso(4, 47.6), iso(31, 47.6), "rgba(250, 202, 21, .92)", 1.55);
+
+      // Every operational object is positioned from the exact same metre grid.
+      // This makes the view read like a digital-twin viewport rather than a painted illustration.
+      for (let x = 4; x <= 24; x += 4) dock(x);
+
+      // Seven straight selective-rack runs with a deliberately mixed pallet occupancy.
+      rowY.forEach((y, index) => rackRow(rackStartX, y, rackLength, rackDepth, index));
+
+      // Receiving and consolidation conveyors in the blue staging zone.
+      conveyor(4.6, 32.7, 19.2);
+      conveyor(4.6, 36.6, 19.2);
+      conveyor(4.6, 40.5, 19.2);
+      conveyor(5.8, 44.5, 15.3);
+      conveyor(21.7, 33.5, 1.2, 10.2);
+      conveyor(8.5, 29.9, 13.7);
+
+      // Work in progress at the consolidation benches.
+      pallet(5.6, 34.0, 2.2, 1.1, .14);
+      pallet(10.5, 35.0, 2.2, 1.1, .14, "#d9dce1");
+      pallet(13.3, 38.0, 2.2, 1.1, .14, "#d9dce1");
+      pallet(18, 41.1, 2.2, 1.1, .14);
+      pallet(24, 45.1, 2.2, 1.1, .14, "#d9dce1");
+      pallet(27.2, 19.5, 2.2, 1.1, .14, "#d9dce1");
+
+      // Associates are deliberately clustered at the manual touch points, not inside traffic lanes.
+      [
+        [7, 34], [10, 35], [13, 33.7], [17, 35.4], [20, 34],
+        [8, 39], [12, 38], [16, 39.4], [20, 40],
+        [9, 43], [14, 44], [19, 43.5], [23, 45]
+      ].forEach(([x, y]) => worker(x, y));
+
+      // A mix of counterbalance and reach trucks makes the equipment strategy legible at a glance.
+      forklift(29.5, 15.5, "counterbalance");
+      forklift(52, 11.0, "reach");
+      forklift(61.5, 22.8, "reach");
+      forklift(68, 34.6, "reach");
+      forklift(77, 46.0, "counterbalance");
+      palletJack(23, 42.5);
+    }
+    resize();
+  </script>
+</body>
+</html>
+"""
+
 
 st.markdown(
     """
@@ -840,6 +1244,237 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
+st.markdown(
+    """
+    <style>
+      .cover-kicker {
+        color: #3B67E5; font-size: .74rem; font-weight: 800; letter-spacing: .13em;
+        text-transform: uppercase; margin: 0 0 .9rem 0;
+      }
+      .cover-title {
+        max-width: 910px; color: #07111F; font-size: clamp(2.55rem, 5.2vw, 5.25rem);
+        font-weight: 780; letter-spacing: -.065em; line-height: .98; margin: 0 0 1.15rem 0;
+      }
+      .cover-copy {
+        max-width: 710px; color: #5D6B7E; font-size: 1.08rem; line-height: 1.58; margin: 0 0 1.35rem 0;
+      }
+      [data-testid="stImage"] img {
+        border: 1px solid #DCE5EE; border-radius: 22px; box-shadow: 0 22px 52px rgba(20, 43, 70, .17);
+      }
+      .cover-pills { display:flex; flex-wrap:wrap; gap:.55rem; margin: 1.15rem 0 4.7rem 0; }
+      .cover-pill {
+        border: 1px solid #D8E4F1; border-radius: 999px; color: #274462; background: #FFF;
+        font-size: .79rem; font-weight: 760; padding: .45rem .78rem;
+      }
+      .story-step { margin-top: 5.4rem; }
+      .step-line { display:flex; align-items:center; gap:.8rem; color:#3B67E5; font-size:.74rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .step-number {
+        display:grid; place-items:center; width:1.85rem; height:1.85rem; border-radius:50%;
+        color:#FFF; background:#3B67E5; font-size:.72rem;
+      }
+      .step-title {
+        max-width:870px; color:#07111F; font-size:clamp(1.85rem, 3.5vw, 3.25rem); font-weight:770;
+        letter-spacing:-.055em; line-height:1.05; margin:.85rem 0 .7rem;
+      }
+      .step-copy { max-width:735px; color:#5D6B7E; font-size:1rem; line-height:1.58; margin:0 0 1.55rem; }
+      .visual-label { color:#536D85; font-size:.73rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin:.85rem 0 0; }
+      .motion-canvas {
+        position:relative; overflow:hidden; min-height:405px; padding:1.55rem; border:1px solid #DCE5EE;
+        border-radius:22px; background:linear-gradient(140deg,#F8FAFD 0%,#EAF1F8 100%);
+      }
+      .motion-caption { color:#26445F; font-weight:800; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; }
+      .motion-figure { display:grid; grid-template-columns: 1.18fr .82fr; gap:1.6rem; align-items:center; margin-top:1.1rem; }
+      .motion-traces { display:grid; gap:.75rem; }
+      .motion-trace { position:relative; height:2.65rem; border-radius:10px; background:#FFF; border:1px solid #DCE6EE; overflow:hidden; }
+      .motion-trace::after {
+        content:""; position:absolute; left:9%; right:7%; top:50%; border-top:4px solid #4D7CFE;
+        transform:translateY(-50%); border-radius:999px;
+      }
+      .motion-trace:nth-child(2)::after { left:18%; right:18%; border-top-color:#34C99A; border-top-style:dashed; }
+      .motion-trace:nth-child(3)::after { left:4%; right:28%; border-top-color:#FF9A5D; }
+      .motion-trace:nth-child(4)::after { left:31%; right:5%; border-top-color:#9A78EE; border-top-style:dashed; }
+      .motion-name { position:absolute; z-index:1; top:50%; left:.72rem; transform:translateY(-50%); color:#4D6579; font-size:.73rem; font-weight:760; background:#FFF; padding-right:.35rem; }
+      .motion-arrow { color:#4D7CFE; font-size:2rem; font-weight:700; text-align:center; }
+      .time-bucket {
+        min-height:220px; padding:1.15rem; border-radius:16px; color:#FFF;
+        background:linear-gradient(145deg,#122C4B,#214E78); box-shadow:0 16px 28px rgba(20,53,83,.18);
+        display:flex; flex-direction:column; justify-content:center; text-align:center;
+      }
+      .bucket-kicker { color:#9CC4FF; font-size:.68rem; letter-spacing:.1em; font-weight:800; text-transform:uppercase; }
+      .bucket-expression { display:flex; align-items:center; justify-content:center; gap:.55rem; margin:.85rem 0 .65rem; color:#FFF; font-size:1.15rem; font-weight:760; }
+      .bucket-cell { min-width:78px; padding:.8rem .35rem; border:1px solid rgba(205,226,255,.32); border-radius:10px; background:rgba(255,255,255,.09); }
+      .bucket-note { color:#C1D7EE; font-size:.78rem; line-height:1.45; }
+      .forecast-map {
+        display:grid; grid-template-columns: 1.05fr .18fr 1.55fr; gap:1rem; align-items:center; padding:1.55rem;
+        border:1px solid #DCE5EE; border-radius:22px; background:#FFF;
+      }
+      .variable-stack { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+      .variable { color:#4A637A; background:#F4F7FB; border:1px solid #DCE5EE; border-radius:10px; padding:.7rem; font-size:.77rem; font-weight:740; text-align:center; }
+      .forecast-arrow { color:#4D7CFE; font-size:2.5rem; text-align:center; font-weight:700; }
+      .activity-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:.65rem; }
+      .activity-box { min-height:75px; display:flex; align-items:flex-end; padding:.85rem; border-radius:12px; background:linear-gradient(145deg,#5C88FF,#3B67E5); color:#FFF; font-size:.85rem; font-weight:780; box-shadow:0 8px 16px rgba(59,103,229,.18); }
+      .activity-box:nth-child(2) { background:linear-gradient(145deg,#609FE6,#3771B9); }
+      .activity-box:nth-child(3) { background:linear-gradient(145deg,#56BCA3,#269174); }
+      .activity-box:nth-child(4) { background:linear-gradient(145deg,#9A8FE5,#7468C8); }
+      .schedule-board { overflow:hidden; padding:1.55rem; border:1px solid #DCE5EE; border-radius:22px; background:#F8FAFD; }
+      .schedule-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+      .schedule-title { color:#26445F; font-size:.78rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .schedule-key { color:#698197; font-size:.75rem; font-weight:700; }
+      .schedule-grid { display:grid; grid-template-columns:116px repeat(16,1fr); gap:3px; min-width:720px; }
+      .schedule-grid > div { min-height:30px; border-radius:4px; }
+      .schedule-row-label { display:flex; align-items:center; color:#4E657A; font-size:.77rem; font-weight:760; }
+      .slot { background:#E6ECF2; }
+      .slot.active { background:#4D7CFE; }
+      .slot.mint { background:#34C99A; }
+      .slot.orange { background:#FF9A5D; }
+      .slot.purple { background:#9A78EE; }
+      .schedule-times { display:grid; grid-template-columns:116px repeat(4,1fr); color:#7D91A3; font-size:.67rem; font-weight:760; margin-top:.55rem; min-width:720px; }
+      .dashboard-shell { padding:1.55rem; border-radius:22px; background:linear-gradient(145deg,#0B1930,#152F52); box-shadow:0 22px 48px rgba(20,43,70,.18); }
+      .dashboard-top { display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; }
+      .dashboard-label { color:#9CC4FF; font-size:.73rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .dashboard-title { color:#FFF; font-size:clamp(1.45rem,3vw,2.35rem); line-height:1.08; letter-spacing:-.045em; font-weight:740; margin:.5rem 0 0; }
+      .status-pill { color:#BFECD9; border:1px solid rgba(112,220,178,.32); border-radius:999px; padding:.45rem .65rem; font-size:.68rem; font-weight:800; white-space:nowrap; }
+      .dashboard-grid { display:grid; grid-template-columns:1.25fr .75fr; gap:1rem; margin-top:1.25rem; }
+      .simulation-pane { min-height:230px; border:1px solid rgba(174,207,248,.22); border-radius:14px; background:linear-gradient(145deg,rgba(84,129,173,.28),rgba(10,27,49,.3)); position:relative; overflow:hidden; }
+      .simulation-pane::before { content:""; position:absolute; inset:20px; background-image:linear-gradient(rgba(166,203,240,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(166,203,240,.13) 1px,transparent 1px); background-size:23px 23px; transform:skewY(-10deg); opacity:.75; }
+      .sim-flow { position:absolute; border-top:4px solid #4D7CFE; border-radius:999px; }
+      .sim-flow.one { width:53%; top:47%; left:16%; transform:rotate(-13deg); }
+      .sim-flow.two { width:36%; top:62%; left:43%; border-color:#34C99A; transform:rotate(18deg); }
+      .sim-node { position:absolute; width:13px; height:13px; border-radius:50%; background:#FFF; box-shadow:0 0 0 5px rgba(77,124,254,.18); }
+      .sim-node.a { top:39%; left:16%; } .sim-node.b { top:31%; left:65%; } .sim-node.c { top:68%; left:74%; background:#34C99A; box-shadow:0 0 0 5px rgba(52,201,154,.18); }
+      .dashboard-metrics { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+      .dashboard-metric { min-height:104px; padding:.85rem; border:1px solid rgba(174,207,248,.20); border-radius:12px; background:rgba(255,255,255,.06); }
+      .metric-label { color:#AFC7E3; font-size:.68rem; font-weight:780; letter-spacing:.08em; text-transform:uppercase; }
+      .metric-value { color:#FFF; font-size:1.02rem; font-weight:780; margin-top:.75rem; }
+      .metric-sub { color:#9FC0D9; font-size:.73rem; margin-top:.25rem; }
+      @media (max-width: 800px) {
+        .motion-figure, .forecast-map, .dashboard-grid { grid-template-columns:1fr; }
+        .forecast-arrow { transform:rotate(90deg); }
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<div class="cover-kicker">Labor standards • workload forecasting • simulation</div>', unsafe_allow_html=True)
+st.markdown('<h1 class="cover-title">A digital twin for better labor, throughput, and flexibility.</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="cover-copy">Model the work, translate movement into time, forecast it at the right level of detail, and test the operating plan before it reaches the floor.</p>',
+    unsafe_allow_html=True,
+)
+st.image("assets/warehouse_hero_3d.png", use_container_width=True)
+st.markdown(
+    '<div class="cover-pills"><span class="cover-pill">Labor</span><span class="cover-pill">Throughput</span><span class="cover-pill">Flexibility</span></div>',
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">01</span> Model the operation</div><h2 class="step-title">Start with the work as it actually happens.</h2><p class="step-copy">The twin begins with the physical movements of people, equipment, pallets, and locations.</p></section>', unsafe_allow_html=True)
+model_left, model_right = st.columns(2, gap="large")
+with model_left:
+    st.iframe(WAREHOUSE_ANIMATION, height=510, width="stretch", alt="Forklift task animation")
+    st.markdown('<p class="visual-label">Equipment movement</p>', unsafe_allow_html=True)
+with model_right:
+    st.iframe(PEOPLE_PALLET_ANIMATION, height=510, width="stretch", alt="People moving pallets animation")
+    st.markdown('<p class="visual-label">Manual pallet movement</p>', unsafe_allow_html=True)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">02</span> Translate motion into time</div><h2 class="step-title">Each movement becomes a measurable element of work.</h2><p class="step-copy">Motion traces stack into a standard activity time, creating a common language for labor content.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="motion-canvas">
+      <div class="motion-caption">Motion sequence → standard time</div>
+      <div class="motion-figure">
+        <div class="motion-traces">
+          <div class="motion-trace"><span class="motion-name">Travel</span></div>
+          <div class="motion-trace"><span class="motion-name">Access</span></div>
+          <div class="motion-trace"><span class="motion-name">Handle</span></div>
+          <div class="motion-trace"><span class="motion-name">Place</span></div>
+        </div>
+        <div>
+          <div class="motion-arrow">→</div>
+          <div class="time-bucket">
+            <div class="bucket-kicker">Standard activity</div>
+            <div class="bucket-expression"><span class="bucket-cell">Activity</span><span>×</span><span class="bucket-cell">Time</span></div>
+            <div class="bucket-note">A repeatable unit of labor content, ready to be forecasted and scheduled.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">03</span> Forecast the work mix</div><h2 class="step-title">Forecast the variables that actually create the workload.</h2><p class="step-copy">Instead of sending a generic volume number to labor planning, translate granular operating drivers into activity demand.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="forecast-map">
+      <div class="variable-stack">
+        <div class="variable">Order profile</div><div class="variable">SKU family</div>
+        <div class="variable">Zone</div><div class="variable">Location level</div>
+        <div class="variable">Equipment</div><div class="variable">Handling type</div>
+      </div>
+      <div class="forecast-arrow">→</div>
+      <div class="activity-grid">
+        <div class="activity-box">Putaway</div><div class="activity-box">Replenishment</div>
+        <div class="activity-box">Picking</div><div class="activity-box">Shipping</div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">04</span> Build the operating schedule</div><h2 class="step-title">Turn forecasted activities into a granular labor plan.</h2><p class="step-copy">Workload is staged into 15-minute intervals so staffing and task release can respond to the shape of demand.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="schedule-board">
+      <div class="schedule-head"><div class="schedule-title">Activity demand by 15-minute interval</div><div class="schedule-key">Template view • no data loaded</div></div>
+      <div class="schedule-grid">
+        <div class="schedule-row-label">Receiving</div><div class="slot"></div><div class="slot active"></div><div class="slot active"></div><div class="slot active"></div><div class="slot active"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="schedule-row-label">Putaway</div><div class="slot"></div><div class="slot"></div><div class="slot mint"></div><div class="slot mint"></div><div class="slot mint"></div><div class="slot mint"></div><div class="slot mint"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="schedule-row-label">Picking</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot orange"></div><div class="slot orange"></div><div class="slot orange"></div><div class="slot orange"></div><div class="slot orange"></div><div class="slot orange"></div><div class="slot orange"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="schedule-row-label">Shipping</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot purple"></div><div class="slot purple"></div><div class="slot purple"></div><div class="slot purple"></div><div class="slot purple"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      </div>
+      <div class="schedule-times"><span></span><span>Start of shift</span><span>Mid-shift</span><span>Peak</span><span>Close</span></div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">05</span> Test the operating system</div><h2 class="step-title">Run the digital twin as an operating decision dashboard.</h2><p class="step-copy">Compare staffing, throughput, layout, and service scenarios before changing the real operation.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="dashboard-shell">
+      <div class="dashboard-top">
+        <div><div class="dashboard-label">Digital twin scenario workspace</div><div class="dashboard-title">Test the plan before the floor has to live with it.</div></div>
+        <div class="status-pill">READY FOR SCENARIOS</div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="simulation-pane"><span class="sim-flow one"></span><span class="sim-flow two"></span><span class="sim-node a"></span><span class="sim-node b"></span><span class="sim-node c"></span></div>
+        <div class="dashboard-metrics">
+          <div class="dashboard-metric"><div class="metric-label">Labor</div><div class="metric-value">Staffing plan</div><div class="metric-sub">By interval and zone</div></div>
+          <div class="dashboard-metric"><div class="metric-label">Throughput</div><div class="metric-value">Flow capacity</div><div class="metric-sub">By task and route</div></div>
+          <div class="dashboard-metric"><div class="metric-label">Flexibility</div><div class="metric-value">Scenario range</div><div class="metric-sub">Test alternative rules</div></div>
+          <div class="dashboard-metric"><div class="metric-label">Layout</div><div class="metric-value">Operating design</div><div class="metric-sub">Evaluate change safely</div></div>
+        </div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.stop()
+
+
+st.iframe(COVER_FLOOR, height=580, width="stretch", alt="Grid-based warehouse cover foundation")
+st.caption("Grid-based facility foundation. The existing animated warehouse story remains below.")
+st.markdown('<div class="story-rule"></div>', unsafe_allow_html=True)
 
 st.markdown('<div class="eyebrow">Labor standards • workload forecasting • digital twin</div>', unsafe_allow_html=True)
 hero_copy, hero_visual = st.columns([0.92, 1.08], gap="large")

@@ -1428,6 +1428,143 @@ WAREHOUSE_ANIMATION = r"""
 </html>
 """
 
+ACTIVITY_STANDARD_ANIMATION = r"""
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    html, body { margin:0; background:#0B1930; overflow:hidden; }
+    .stage {
+      position:relative; height:530px; overflow:hidden; border-radius:22px;
+      background:linear-gradient(135deg,#0A1930 0%,#122D4D 100%);
+      font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+    }
+    canvas { position:absolute; inset:0; width:100%; height:100%; }
+    .panel {
+      position:absolute; right:18px; top:18px; bottom:18px; width:37%;
+      padding:16px; box-sizing:border-box; border:1px solid rgba(177,207,241,.20);
+      border-radius:16px; background:rgba(7,21,40,.84); backdrop-filter:blur(10px);
+    }
+    .eyebrow { color:#9CC4FF; font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .panel h3 { color:#FFF; font-size:18px; line-height:1.1; letter-spacing:-.03em; margin:7px 0 13px; }
+    .element {
+      display:grid; grid-template-columns:28px 1fr 40px; gap:9px; align-items:center;
+      min-height:43px; padding:6px 8px; margin-bottom:7px; border:1px solid rgba(174,207,248,.15);
+      border-radius:9px; color:#AFC7E3; background:rgba(255,255,255,.035); transition:.24s ease;
+      font-size:11px; font-weight:700;
+    }
+    .element .code { color:#7FAEF0; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10px; }
+    .element .time { text-align:right; color:#7F97B0; font-size:10px; }
+    .element.active { color:#FFF; border-color:rgba(77,124,254,.85); background:rgba(77,124,254,.22); box-shadow:0 0 0 3px rgba(77,124,254,.11); }
+    .element.active .code, .element.active .time { color:#C6DAFF; }
+    .element.complete { color:#D7E5F7; background:rgba(255,255,255,.07); }
+    .activity {
+      position:absolute; right:16px; left:16px; bottom:15px; padding:12px; border-radius:11px;
+      border:1px solid rgba(139,184,255,.40); color:#FFF; background:linear-gradient(135deg,#477AFF,#2858C9);
+      transform:translateY(11px); opacity:.35; transition:.35s ease;
+    }
+    .activity.ready { transform:translateY(0); opacity:1; box-shadow:0 12px 26px rgba(28,76,185,.30); }
+    .activity small { display:block; color:#DCE8FF; font-weight:800; font-size:9px; letter-spacing:.1em; text-transform:uppercase; }
+    .activity strong { display:block; margin-top:4px; font-size:13px; letter-spacing:-.01em; }
+    .scene-label {
+      position:absolute; top:18px; left:20px; color:#C9DDFF; background:rgba(8,25,44,.68);
+      border:1px solid rgba(148,190,255,.28); border-radius:999px; padding:8px 12px;
+      font-size:10px; font-weight:800; letter-spacing:.11em; text-transform:uppercase;
+    }
+    .scene-caption { position:absolute; left:21px; bottom:19px; max-width:46%; color:#DCE9F8; font-size:12px; line-height:1.42; }
+    .scene-caption b { color:#FFF; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <canvas id="scene"></canvas>
+    <div class="scene-label">Physical task → standard activity</div>
+    <div class="scene-caption"><b>The movement happens first.</b><br>Task elements appear at the moment they occur, then resolve into one activity.</div>
+    <div class="panel">
+      <div class="eyebrow">MOST sequence</div>
+      <h3>High-rack pallet placement</h3>
+      <div class="element" data-step="0"><span class="code">A6</span><span>Travel to location</span><span class="time">travel</span></div>
+      <div class="element" data-step="1"><span class="code">B6</span><span>Align &amp; position</span><span class="time">access</span></div>
+      <div class="element" data-step="2"><span class="code">M16</span><span>Lift to elevation</span><span class="time">lift</span></div>
+      <div class="element" data-step="3"><span class="code">P6</span><span>Place &amp; clear</span><span class="time">place</span></div>
+      <div class="activity" id="activity"><small>Standard activity</small><strong>Place pallet in high location</strong></div>
+    </div>
+  </div>
+  <script>
+    const canvas = document.getElementById("scene");
+    const ctx = canvas.getContext("2d");
+    const cards = [...document.querySelectorAll(".element")];
+    const activity = document.getElementById("activity");
+    let w = 0, h = 0, dpr = 1;
+    const DURATION = 7600;
+    const phases = [[0,.26],[.26,.42],[.42,.71],[.71,.91]];
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = r.width; h = r.height; canvas.width = w*dpr; canvas.height = h*dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    window.addEventListener("resize", resize); resize();
+    function rect(x,y,ww,hh,fill,stroke=null) {
+      ctx.fillStyle=fill; ctx.fillRect(x,y,ww,hh);
+      if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.strokeRect(x,y,ww,hh);}
+    }
+    function drawRack(x,y,scale) {
+      ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
+      rect(0,0,178,238,"#56778F","#8FAAC0");
+      ctx.strokeStyle="#E8F0F6"; ctx.lineWidth=3;
+      for(let yy=48;yy<238;yy+=48){ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(178,yy);ctx.stroke();}
+      for(let xx=44;xx<178;xx+=44){ctx.beginPath();ctx.moveTo(xx,0);ctx.lineTo(xx,238);ctx.stroke();}
+      [[92,9],[136,9],[92,57],[136,57],[136,105],[92,153],[136,153]].forEach(([px,py])=>{
+        rect(px,py,34,28,"#D89E5F","#9B6237");
+        ctx.strokeStyle="#B87948";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px+17,py);ctx.lineTo(px+17,py+28);ctx.moveTo(px,py+14);ctx.lineTo(px+34,py+14);ctx.stroke();
+      });
+      ctx.restore();
+    }
+    function drawPerson(x,y,t) {
+      ctx.save();ctx.translate(x,y);
+      ctx.fillStyle="rgba(0,0,0,.20)";ctx.beginPath();ctx.ellipse(0,20,14,4,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle="#F0C7A7";ctx.beginPath();ctx.arc(0,-20,7,0,Math.PI*2);ctx.fill();
+      rect(-8,-14,16,24,"#DDEA36");ctx.strokeStyle="#263847";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-4,10);ctx.lineTo(-7,20);ctx.moveTo(4,10);ctx.lineTo(7,20);ctx.stroke();
+      ctx.restore();
+    }
+    function draw(time) {
+      const t = (time % DURATION)/DURATION;
+      ctx.clearRect(0,0,w,h);
+      const leftW = Math.max(260, w*.58);
+      const bg = ctx.createLinearGradient(0,0,leftW,h);bg.addColorStop(0,"#163451");bg.addColorStop(1,"#0D2036");ctx.fillStyle=bg;ctx.fillRect(0,0,leftW,h);
+      ctx.strokeStyle="rgba(176,210,238,.14)";ctx.lineWidth=1;
+      for(let x=-h;x<leftW+h;x+=31){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x-h*.82,h);ctx.stroke();}
+      for(let y=42;y<h;y+=27){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(leftW,y);ctx.stroke();}
+      const rackX = leftW*.52, rackY = 91; drawRack(rackX,rackY,1);
+      const phase = phases.findIndex(([a,b]) => t>=a && t<b);
+      cards.forEach((card,i)=>card.className="element"+(i<phase?" complete":i===phase?" active":""));
+      activity.classList.toggle("ready", t>.91 || t<.04);
+      let truckX = 52, mastY = 258, palletY = 278;
+      if(t<.26){truckX = 42 + (rackX-120)*Math.min(t/.26,1); }
+      else { truckX = rackX-78; }
+      const lift = t<.42 ? 0 : t<.71 ? (t-.42)/.29 : 1;
+      palletY = 278 - lift*180;
+      const clear = t>.71 ? (t-.71)/.20 : 0;
+      truckX -= clear*150;
+      ctx.save();ctx.translate(truckX,mastY);
+      ctx.fillStyle="rgba(0,0,0,.25)";ctx.beginPath();ctx.ellipse(28,35,37,10,0,0,Math.PI*2);ctx.fill();
+      rect(0,0,58,27,"#F3C84E","#A97822");rect(13,-26,28,29,"#27465D","#183044");rect(47,-18,6,76,"#213D51");rect(52,-18-lift*180,49,5,"#C5D5E0");
+      ctx.fillStyle="#22323F";ctx.beginPath();ctx.arc(12,29,8,0,Math.PI*2);ctx.arc(46,29,8,0,Math.PI*2);ctx.fill();ctx.restore();
+      if(t>.42 && t<.87){rect(rackX+62,palletY,35,28,"#D89E5F","#9B6237");}
+      if(t>.87){rect(rackX+92,9,34,28,"#D89E5F","#9B6237");}
+      const personT = (t*1.28)%1; const px = 104 + personT*(rackX-205); const py = h-105-personT*46;
+      drawPerson(px,py,personT);rect(px+12,py-1,30,20,"#D89E5F","#9B6237");
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>
+"""
+
+
 PEOPLE_PALLET_ANIMATION = r"""
 <!doctype html>
 <html>
@@ -2226,6 +2363,156 @@ st.markdown(
     '<div class="cover-pills"><span class="cover-pill">Labor</span><span class="cover-pill">Throughput</span><span class="cover-pill">Flexibility</span></div>',
     unsafe_allow_html=True,
 )
+
+
+st.markdown(
+    """
+    <style>
+      .activity-library-to-schedule {
+        display:grid; grid-template-columns:.93fr 64px 1.45fr; gap:1rem; align-items:center;
+        padding:1.35rem; border:1px solid #DCE5EE; border-radius:22px; background:#F8FAFD;
+      }
+      .flow-panel { min-height:270px; padding:1rem; border:1px solid #DCE5EE; border-radius:14px; background:#FFF; }
+      .flow-panel-title { color:#38526B; font-size:.7rem; font-weight:800; letter-spacing:.11em; text-transform:uppercase; margin-bottom:.8rem; }
+      .activity-library { display:grid; grid-template-columns:1fr 1fr; gap:.55rem; }
+      .activity-token {
+        min-height:66px; padding:.75rem; display:flex; align-items:flex-end; border-radius:10px;
+        color:#FFF; background:linear-gradient(135deg,#5D88FF,#3D68E8); box-shadow:0 8px 16px rgba(59,103,229,.17);
+        font-size:.77rem; font-weight:770; line-height:1.16;
+      }
+      .activity-token:nth-child(2) { background:linear-gradient(135deg,#6D9DE7,#4276C1); }
+      .activity-token:nth-child(3) { background:linear-gradient(135deg,#54BCA3,#2A9478); }
+      .activity-token:nth-child(4) { background:linear-gradient(135deg,#9A8EE5,#776AC7); }
+      .activity-token:nth-child(5) { background:linear-gradient(135deg,#5D88FF,#3D68E8); }
+      .activity-flow-arrow { color:#4D7CFE; font-size:2.8rem; font-weight:800; text-align:center; }
+      .schedule-note { color:#4F6A85; font-size:.8rem; font-weight:720; line-height:1.45; margin-bottom:.75rem; }
+      .schedule-15 { display:grid; grid-template-columns:90px repeat(12,1fr); gap:3px; align-items:center; }
+      .schedule-15 div { min-height:29px; border-radius:4px; }
+      .schedule-15 .row-name { display:flex; align-items:center; color:#4D657A; font-size:.72rem; font-weight:780; }
+      .schedule-15 .empty { background:#E6ECF2; }
+      .schedule-15 .work-blue { background:#4D7CFE; }
+      .schedule-15 .work-mint { background:#34C99A; }
+      .schedule-15 .work-orange { background:#FF9A5D; }
+      .interval-caption { display:flex; justify-content:space-between; color:#8295A6; font-size:.66rem; font-weight:750; letter-spacing:.04em; margin: .55rem 0 0 92px; }
+      .staffing-board { padding:1.35rem; border:1px solid #DCE5EE; border-radius:22px; background:#FFF; }
+      .staffing-intro { display:flex; gap:.9rem; align-items:center; padding-bottom:1rem; margin-bottom:1rem; border-bottom:1px solid #E3EAF1; }
+      .staffing-intro-mark { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; color:#FFF; background:#4D7CFE; font-size:1.1rem; font-weight:800; }
+      .staffing-intro strong { color:#223D56; font-size:.96rem; } .staffing-intro span { display:block; color:#698197; font-size:.78rem; margin-top:.12rem; }
+      .staffing-output { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; }
+      .staffing-card { min-height:105px; padding:1rem; border:1px solid #DFE7EF; border-radius:12px; background:#F8FAFD; }
+      .staffing-card label { display:block; color:#6F8598; font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .staffing-card strong { display:block; color:#203C56; font-size:1rem; margin-top:.65rem; }
+      .staffing-card span { display:block; color:#648098; font-size:.75rem; margin-top:.28rem; }
+      .time-spend { display:grid; grid-template-columns:.75fr 1.25fr; gap:1rem; padding:1.35rem; border:1px solid #DCE5EE; border-radius:22px; background:#F8FAFD; }
+      .time-spend-copy { padding:.3rem .25rem; } .time-spend-copy strong { color:#203C56; font-size:1.05rem; line-height:1.3; } .time-spend-copy p { color:#698197; font-size:.82rem; line-height:1.5; }
+      .time-bars { display:grid; gap:.75rem; }
+      .time-bar { display:grid; grid-template-columns:76px 1fr; gap:.65rem; align-items:center; }
+      .time-bar label { color:#587087; font-size:.75rem; font-weight:760; }
+      .time-track { height:17px; overflow:hidden; border-radius:999px; background:#E3EAF1; } .time-fill { height:100%; border-radius:999px; background:#4D7CFE; } .time-fill.mint { background:#34C99A; } .time-fill.orange { background:#FF9A5D; } .time-fill.purple { background:#9A78EE; } .time-fill.gray { background:#AAB8C5; }
+      @media (max-width:800px) {
+        .activity-library-to-schedule, .time-spend { grid-template-columns:1fr; }
+        .activity-flow-arrow { transform:rotate(90deg); }
+        .staffing-output { grid-template-columns:1fr; }
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">01</span> Model and standardize the work</div><h2 class="step-title">Watch a physical movement become one standard activity.</h2><p class="step-copy">The animation and the timed elements are intentionally linked: when a movement occurs, its work element appears. Once complete, those elements become a reusable activity.</p></section>', unsafe_allow_html=True)
+st.iframe(ACTIVITY_STANDARD_ANIMATION, height=530, width="stretch", alt="Physical movement synchronized with MOST task elements")
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">02</span> Forecast activities, not generic units</div><h2 class="step-title">A forecasted work mix becomes a 15-minute workload plan.</h2><p class="step-copy">Each blue block is a measured activity, not merely a pallet or sales unit. The forecast predicts the mix of those activities and stages them into operating intervals.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="activity-library-to-schedule">
+      <div class="flow-panel">
+        <div class="flow-panel-title">Forecasted activity mix</div>
+        <div class="activity-library">
+          <div class="activity-token">Ground pallet putaway</div>
+          <div class="activity-token">High-rack pallet placement</div>
+          <div class="activity-token">Case replenishment</div>
+          <div class="activity-token">Manual pallet transfer</div>
+          <div class="activity-token">Dock staging</div>
+        </div>
+      </div>
+      <div class="activity-flow-arrow">→</div>
+      <div class="flow-panel">
+        <div class="flow-panel-title">15-minute workload schedule</div>
+        <div class="schedule-note">Forecast by activity and task conditions, not just high-level volume.</div>
+        <div class="schedule-15">
+          <div class="row-name">Putaway</div><div class="empty"></div><div class="work-blue"></div><div class="work-blue"></div><div class="work-blue"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
+          <div class="row-name">Replenish</div><div class="empty"></div><div class="empty"></div><div class="work-mint"></div><div class="work-mint"></div><div class="work-mint"></div><div class="work-mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
+          <div class="row-name">Shipping</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="work-orange"></div><div class="work-orange"></div><div class="work-orange"></div><div class="work-orange"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
+        </div>
+        <div class="interval-caption"><span>Start</span><span>15-minute intervals</span><span>Peak</span></div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">03</span> Turn workload into deployment</div><h2 class="step-title">Know who to deploy, to what work, and where.</h2><p class="step-copy">The operating plan brings the task-specific workload together with roles, zones, equipment, and interval-level demand.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="staffing-board">
+      <div class="staffing-intro"><div class="staffing-intro-mark">→</div><div><strong>Workload plan → deployment plan</strong><span>Placeholder for the actual staffing logic and recommended assignments.</span></div></div>
+      <div class="staffing-output">
+        <div class="staffing-card"><label>Who</label><strong>Right role</strong><span>Forklift operator, picker, dock associate, lead</span></div>
+        <div class="staffing-card"><label>What</label><strong>Right activity</strong><span>Putaway, replenishment, picking, staging</span></div>
+        <div class="staffing-card"><label>Where</label><strong>Right location</strong><span>Dock, reserve, pick face, consolidation zone</span></div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">04</span> See where labor time goes</div><h2 class="step-title">Make travel, handling, waiting, and idle time visible.</h2><p class="step-copy">The model does not only report total labor. It explains what is consuming time, so the operation can improve the work itself.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="time-spend">
+      <div class="time-spend-copy"><strong>Labor content becomes diagnosable.</strong><p>Placeholder for measured or simulated time allocation by activity, role, zone, and shift.</p></div>
+      <div class="time-bars">
+        <div class="time-bar"><label>Travel</label><div class="time-track"><div class="time-fill" style="width:78%"></div></div></div>
+        <div class="time-bar"><label>Handle</label><div class="time-track"><div class="time-fill mint" style="width:56%"></div></div></div>
+        <div class="time-bar"><label>Place</label><div class="time-track"><div class="time-fill orange" style="width:43%"></div></div></div>
+        <div class="time-bar"><label>Waiting</label><div class="time-track"><div class="time-fill purple" style="width:29%"></div></div></div>
+        <div class="time-bar"><label>Idle</label><div class="time-track"><div class="time-fill gray" style="width:18%"></div></div></div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">05</span> Test the operating system</div><h2 class="step-title">Digital-twin dashboard placeholder.</h2><p class="step-copy">This is where the final simulation model, scenarios, and operating decisions will live.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="dashboard-shell">
+      <div class="dashboard-top">
+        <div><div class="dashboard-label">Digital twin scenario workspace</div><div class="dashboard-title">Test the plan before the floor has to live with it.</div></div>
+        <div class="status-pill">DASHBOARD PLACEHOLDER</div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="simulation-pane"><span class="sim-flow one"></span><span class="sim-flow two"></span><span class="sim-node a"></span><span class="sim-node b"></span><span class="sim-node c"></span></div>
+        <div class="dashboard-metrics">
+          <div class="dashboard-metric"><div class="metric-label">Labor</div><div class="metric-value">Staffing plan</div><div class="metric-sub">By interval and zone</div></div>
+          <div class="dashboard-metric"><div class="metric-label">Throughput</div><div class="metric-value">Flow capacity</div><div class="metric-sub">By task and route</div></div>
+          <div class="dashboard-metric"><div class="metric-label">Flexibility</div><div class="metric-value">Scenario range</div><div class="metric-sub">Test alternative rules</div></div>
+          <div class="dashboard-metric"><div class="metric-label">Layout</div><div class="metric-value">Operating design</div><div class="metric-sub">Evaluate change safely</div></div>
+        </div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+st.stop()
 
 
 st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">01</span> Model the operation</div><h2 class="step-title">Start with the work as it actually happens.</h2><p class="step-copy">The twin begins with the physical movements of people, equipment, pallets, and locations.</p></section>', unsafe_allow_html=True)

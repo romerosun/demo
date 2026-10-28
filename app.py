@@ -876,7 +876,7 @@ SIMIO_HERO_PATH = Path(__file__).parent / "assets" / "warehouse_hero_simio_crisp
 # Self-contained high-resolution fallback for early deployments that contain
 # app.py before the asset directory reaches Streamlit.
 HERO_IMAGE = base64.b64decode(
-+    "UklGRjAnAgBXRUJQVlA4ICQnAgDw2QadASr/BNACPpE8mEgloyKprfc7wTASCWxu/CryBCQ2u0fmfM40UKiPCMX3/n/4X9ue5y8R6L+5f6H/tf4v3i+Mexr1"
+    "UklGRjAnAgBXRUJQVlA4ICQnAgDw2QadASr/BNACPpE8mEgloyKprfc7wTASCWxu/CryBCQ2u0fmfM40UKiPCMX3/n/4X9ue5y8R6L+5f6H/tf4v3i+Mexr1"
     "x9z/yv/U/wfuz/9/+W8N+uf2p/1HsOeffvn/e/xn+i/dv5p/7D/0f73/ZfBj+f/7T/0f679//+H9gn83/qX/q/wP+m9tP9xfc5/mP/F/6v2f///yF/rH+z/+"
     "f+g/4f///8P1Af73/5f6X/mf//5hf4X/g//L/R/8j///QF/UP9f/+f9j/sfjW/8v///7fwY/7H/w////efAf/Xv9f/+f9X7a37g/8j/////7Rv69/wf/h/rf"
     "95////T9h39N/xv/3/z3/C////w+gD/6////6/F1/AP/r///e2/gH/27iPygfNv6r/qeI/5f9n/t/8T/nf/L/k/mv/e87/v3+h+3/qj/Pvz//X/yftu/u//h"

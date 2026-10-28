@@ -1,12 +1,13 @@
-"""A fixed, top-to-bottom visual story about warehouse labor standards."""
+"""A fixed, top-to-bottom digital-twin introduction for distribution centers."""
 
 import base64
+from pathlib import Path
 
 import streamlit as st
 
 
 st.set_page_config(
-    page_title="From PPH to a Digital Twin",
+    page_title="Data-Driven Decisions",
     page_icon="◈",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -867,6 +868,10 @@ HERO_IMAGE = base64.b64decode(
     "jRdcIUx689EsmD0oBP8/kGC7IWenL7tVMc+nMeXj7Am5TQ56+JGgyXjaIfPBnHqR/h3n1GCb9czpKaPMfhrzOu1QAM3SJRKJpRczLg6oLofjyS4McPcwd+68"
     "MbAAAA=="
 )
+
+# The local asset is preferred; the embedded image keeps the app renderable if
+# only app.py is deployed during an early GitHub/Streamlit update.
+SIMIO_HERO_PATH = Path(__file__).parent / "assets" / "warehouse_hero_simio_style.webp"
 
 _LEGACY_WAREHOUSE_ANIMATION = r"""
 <!doctype html>
@@ -2352,158 +2357,96 @@ st.markdown(
 )
 
 
-st.markdown('<div class="cover-kicker">Labor standards • workload forecasting • simulation</div>', unsafe_allow_html=True)
-st.markdown('<h1 class="cover-title">A digital twin for better labor, throughput, and flexibility.</h1>', unsafe_allow_html=True)
-st.markdown(
-    '<p class="cover-copy">Model the work, translate movement into time, forecast it at the right level of detail, and test the operating plan before it reaches the floor.</p>',
-    unsafe_allow_html=True,
-)
-st.image(HERO_IMAGE, use_container_width=True)
-st.markdown(
-    '<div class="cover-pills"><span class="cover-pill">Labor</span><span class="cover-pill">Throughput</span><span class="cover-pill">Flexibility</span></div>',
-    unsafe_allow_html=True,
-)
-
-
 st.markdown(
     """
     <style>
-      .activity-library-to-schedule {
-        display:grid; grid-template-columns:.93fr 64px 1.45fr; gap:1rem; align-items:center;
-        padding:1.35rem; border:1px solid #DCE5EE; border-radius:22px; background:#F8FAFD;
-      }
-      .flow-panel { min-height:270px; padding:1rem; border:1px solid #DCE5EE; border-radius:14px; background:#FFF; }
-      .flow-panel-title { color:#38526B; font-size:.7rem; font-weight:800; letter-spacing:.11em; text-transform:uppercase; margin-bottom:.8rem; }
-      .activity-library { display:grid; grid-template-columns:1fr 1fr; gap:.55rem; }
-      .activity-token {
-        min-height:66px; padding:.75rem; display:flex; align-items:flex-end; border-radius:10px;
-        color:#FFF; background:linear-gradient(135deg,#5D88FF,#3D68E8); box-shadow:0 8px 16px rgba(59,103,229,.17);
-        font-size:.77rem; font-weight:770; line-height:1.16;
-      }
-      .activity-token:nth-child(2) { background:linear-gradient(135deg,#6D9DE7,#4276C1); }
-      .activity-token:nth-child(3) { background:linear-gradient(135deg,#54BCA3,#2A9478); }
-      .activity-token:nth-child(4) { background:linear-gradient(135deg,#9A8EE5,#776AC7); }
-      .activity-token:nth-child(5) { background:linear-gradient(135deg,#5D88FF,#3D68E8); }
-      .activity-flow-arrow { color:#4D7CFE; font-size:2.8rem; font-weight:800; text-align:center; }
-      .schedule-note { color:#4F6A85; font-size:.8rem; font-weight:720; line-height:1.45; margin-bottom:.75rem; }
-      .schedule-15 { display:grid; grid-template-columns:90px repeat(12,1fr); gap:3px; align-items:center; }
-      .schedule-15 div { min-height:29px; border-radius:4px; }
-      .schedule-15 .row-name { display:flex; align-items:center; color:#4D657A; font-size:.72rem; font-weight:780; }
-      .schedule-15 .empty { background:#E6ECF2; }
-      .schedule-15 .work-blue { background:#4D7CFE; }
-      .schedule-15 .work-mint { background:#34C99A; }
-      .schedule-15 .work-orange { background:#FF9A5D; }
-      .interval-caption { display:flex; justify-content:space-between; color:#8295A6; font-size:.66rem; font-weight:750; letter-spacing:.04em; margin: .55rem 0 0 92px; }
-      .staffing-board { padding:1.35rem; border:1px solid #DCE5EE; border-radius:22px; background:#FFF; }
-      .staffing-intro { display:flex; gap:.9rem; align-items:center; padding-bottom:1rem; margin-bottom:1rem; border-bottom:1px solid #E3EAF1; }
-      .staffing-intro-mark { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; color:#FFF; background:#4D7CFE; font-size:1.1rem; font-weight:800; }
-      .staffing-intro strong { color:#223D56; font-size:.96rem; } .staffing-intro span { display:block; color:#698197; font-size:.78rem; margin-top:.12rem; }
-      .staffing-output { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; }
-      .staffing-card { min-height:105px; padding:1rem; border:1px solid #DFE7EF; border-radius:12px; background:#F8FAFD; }
-      .staffing-card label { display:block; color:#6F8598; font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
-      .staffing-card strong { display:block; color:#203C56; font-size:1rem; margin-top:.65rem; }
-      .staffing-card span { display:block; color:#648098; font-size:.75rem; margin-top:.28rem; }
-      .time-spend { display:grid; grid-template-columns:.75fr 1.25fr; gap:1rem; padding:1.35rem; border:1px solid #DCE5EE; border-radius:22px; background:#F8FAFD; }
-      .time-spend-copy { padding:.3rem .25rem; } .time-spend-copy strong { color:#203C56; font-size:1.05rem; line-height:1.3; } .time-spend-copy p { color:#698197; font-size:.82rem; line-height:1.5; }
-      .time-bars { display:grid; gap:.75rem; }
-      .time-bar { display:grid; grid-template-columns:76px 1fr; gap:.65rem; align-items:center; }
-      .time-bar label { color:#587087; font-size:.75rem; font-weight:760; }
-      .time-track { height:17px; overflow:hidden; border-radius:999px; background:#E3EAF1; } .time-fill { height:100%; border-radius:999px; background:#4D7CFE; } .time-fill.mint { background:#34C99A; } .time-fill.orange { background:#FF9A5D; } .time-fill.purple { background:#9A78EE; } .time-fill.gray { background:#AAB8C5; }
-      @media (max-width:800px) {
-        .activity-library-to-schedule, .time-spend { grid-template-columns:1fr; }
-        .activity-flow-arrow { transform:rotate(90deg); }
-        .staffing-output { grid-template-columns:1fr; }
-      }
+      .landing-kicker { color:#3B67E5; font-size:.74rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; margin:0 0 .85rem; }
+      .landing-title { max-width:900px; color:#07111F; font-size:clamp(3rem,6vw,5.75rem); font-weight:790; letter-spacing:-.07em; line-height:.94; margin:0 0 1.15rem; }
+      .landing-copy { max-width:760px; color:#52657A; font-size:1.12rem; line-height:1.6; margin:0 0 1.45rem; }
+      .outcome-bar { display:flex; flex-wrap:wrap; gap:.55rem; margin:1.15rem 0 5rem; }
+      .outcome-bar span { color:#274462; background:#FFF; border:1px solid #D8E4F1; border-radius:999px; font-size:.78rem; font-weight:760; padding:.48rem .78rem; }
+      .landing-section { margin-top:5.2rem; }
+      .landing-label { color:#3B67E5; font-size:.74rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .landing-heading { max-width:840px; color:#07111F; font-size:clamp(1.9rem,3.7vw,3.45rem); font-weight:770; letter-spacing:-.058em; line-height:1.04; margin:.8rem 0 .7rem; }
+      .landing-section-copy { max-width:760px; color:#5D6B7E; font-size:1.02rem; line-height:1.58; margin:0 0 1.6rem; }
+      .twin-process { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; }
+      .process-card { position:relative; min-height:180px; padding:1.2rem; border:1px solid #DCE5EE; border-radius:18px; background:#FFF; box-shadow:0 8px 26px rgba(24,43,70,.055); }
+      .process-card:not(:last-child)::after { content:"→"; position:absolute; z-index:2; right:-1.05rem; top:47%; display:grid; place-items:center; width:2rem; height:2rem; border-radius:50%; color:#FFF; background:#4D7CFE; font-size:1rem; font-weight:850; }
+      .process-num { color:#3B67E5; font-size:.69rem; font-weight:850; letter-spacing:.1em; }
+      .process-card h3 { color:#122942; font-size:1.08rem; margin:.8rem 0 .48rem; }
+      .process-card p { color:#61768A; font-size:.87rem; line-height:1.48; margin:0; }
+      .insight-board { overflow:hidden; padding:1.3rem; border:1px solid #D8E3ED; border-radius:22px; background:#FFF; box-shadow:0 18px 40px rgba(31,57,85,.08); }
+      .insight-head { display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; padding:0 .1rem 1.1rem; border-bottom:1px solid #E5ECF3; }
+      .insight-eyebrow { color:#6F8598; font-size:.68rem; font-weight:830; letter-spacing:.1em; text-transform:uppercase; }
+      .insight-title { color:#173650; font-size:1.25rem; font-weight:770; margin-top:.3rem; }
+      .illustrative-tag { flex:none; color:#41617B; background:#F2F6FA; border:1px solid #DEE8F1; border-radius:999px; padding:.4rem .6rem; font-size:.67rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+      .insight-body { display:grid; grid-template-columns:1.35fr .65fr; gap:1rem; margin-top:1.1rem; }
+      .floor-view { position:relative; min-height:310px; overflow:hidden; border:1px solid #DDE7F0; border-radius:14px; background-color:#F7F9FC; background-image:linear-gradient(rgba(91,120,146,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(91,120,146,.10) 1px,transparent 1px); background-size:22px 22px; }
+      .floor-zone { position:absolute; color:#60788E; font-size:.63rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+      .floor-zone.receiving { left:5%; bottom:9%; } .floor-zone.storage { left:47%; top:7%; } .floor-zone.shipping { right:7%; bottom:9%; }
+      .dock-bays { position:absolute; left:6%; bottom:18%; width:25%; height:18%; border:1px dashed #94A9BC; border-radius:7px; }
+      .rack-field { position:absolute; left:38%; top:17%; width:52%; height:58%; display:grid; grid-template-columns:repeat(5,1fr); gap:7px; transform:skewY(-3deg); }
+      .rack-row { border:2px solid #6D8498; border-radius:3px; background:repeating-linear-gradient(90deg,#C7D2DC 0 7px,#F5F7FA 7px 11px); opacity:.96; }
+      .route { position:absolute; height:4px; border-radius:99px; transform-origin:left center; }
+      .route.one { left:14%; top:67%; width:47%; background:#55A4ED; transform:rotate(-19deg); } .route.two { left:47%; top:41%; width:32%; background:#52C8A3; transform:rotate(22deg); } .route.three { left:69%; top:56%; width:19%; background:#F5AD5F; transform:rotate(42deg); }
+      .heat { position:absolute; width:96px; height:96px; border-radius:50%; filter:blur(12px); opacity:.68; }
+      .heat.one { left:16%; top:44%; background:radial-gradient(circle,#F26F58 0,rgba(242,111,88,.22) 45%,transparent 70%); } .heat.two { left:56%; top:25%; background:radial-gradient(circle,#F5B85B 0,rgba(245,184,91,.18) 44%,transparent 70%); } .heat.three { right:8%; bottom:14%; background:radial-gradient(circle,#F26F58 0,rgba(242,111,88,.16) 45%,transparent 70%); }
+      .floor-pin { position:absolute; display:flex; align-items:center; gap:.35rem; color:#344F67; background:rgba(255,255,255,.93); border:1px solid #D8E4ED; border-radius:999px; padding:.35rem .52rem; font-size:.66rem; font-weight:790; box-shadow:0 5px 12px rgba(37,62,90,.1); }
+      .floor-pin i { width:7px; height:7px; border-radius:50%; background:#ED6C5B; } .floor-pin.queue { left:12%; top:28%; } .floor-pin.travel { left:52%; bottom:13%; } .floor-pin.delay { right:7%; top:18%; }
+      .insight-stack { display:grid; gap:.7rem; align-content:stretch; }
+      .insight-card { min-height:82px; padding:.9rem; border:1px solid #E0E8F0; border-radius:12px; background:#F9FBFD; }
+      .insight-card small { display:block; color:#71889B; font-size:.65rem; font-weight:820; letter-spacing:.1em; text-transform:uppercase; }
+      .insight-card strong { display:block; color:#1C3A54; font-size:.92rem; margin-top:.43rem; }
+      .insight-card span { display:block; color:#688095; font-size:.72rem; line-height:1.35; margin-top:.28rem; }
+      .action-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; }
+      .action-card { min-height:150px; padding:1.15rem; border-radius:17px; border:1px solid #DCE5EE; background:#FFF; }
+      .action-icon { display:grid; place-items:center; width:34px; height:34px; border-radius:10px; color:#FFF; background:#4D7CFE; font-size:.88rem; font-weight:850; }
+      .action-card:nth-child(2) .action-icon { background:#34A783; } .action-card:nth-child(3) .action-icon { background:#E88757; }
+      .action-card h3 { color:#15314A; font-size:1rem; margin:.85rem 0 .4rem; } .action-card p { color:#61768A; font-size:.85rem; line-height:1.45; margin:0; }
+      .closing-line { max-width:780px; color:#0B2035; font-size:clamp(1.6rem,3.2vw,2.65rem); font-weight:760; line-height:1.08; letter-spacing:-.05em; margin:5rem 0 1rem; }
+      @media (max-width:800px) { .twin-process,.action-grid,.insight-body { grid-template-columns:1fr; } .process-card:not(:last-child)::after { display:none; } .floor-view { min-height:270px; } .insight-head { align-items:flex-start; } }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+st.markdown('<div class="landing-kicker">Illustrative distribution-center digital twin</div>', unsafe_allow_html=True)
+st.markdown('<h1 class="landing-title">Data-Driven Decisions</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="landing-copy">A digital twin shows where work is being done, where bottlenecks build, and where delays begin. It helps you schedule and balance the operation so the right person is in the right place at the right time.</p>',
+    unsafe_allow_html=True,
+)
+st.image(str(SIMIO_HERO_PATH) if SIMIO_HERO_PATH.exists() else HERO_IMAGE, use_container_width=True)
+st.markdown('<div class="outcome-bar"><span>Labor visibility</span><span>Throughput insight</span><span>Operational flexibility</span></div>', unsafe_allow_html=True)
 
-st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">01</span> Model and standardize the work</div><h2 class="step-title">Watch a physical movement become one standard activity.</h2><p class="step-copy">The animation and the timed elements are intentionally linked: when a movement occurs, its work element appears. Once complete, those elements become a reusable activity.</p></section>', unsafe_allow_html=True)
-st.iframe(ACTIVITY_STANDARD_ANIMATION, height=530, width="stretch", alt="Physical movement synchronized with MOST task elements")
-
-
-st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">02</span> Forecast activities, not generic units</div><h2 class="step-title">A forecasted work mix becomes a 15-minute workload plan.</h2><p class="step-copy">Each blue block is a measured activity, not merely a pallet or sales unit. The forecast predicts the mix of those activities and stages them into operating intervals.</p></section>', unsafe_allow_html=True)
+st.markdown('<section class="landing-section"><div class="landing-label">How it works</div><h2 class="landing-heading">From warehouse floor plan to a trusted digital twin.</h2><p class="landing-section-copy">We combine the warehouse floor plan with available operating data, then build and validate a model against the real operation.</p></section>', unsafe_allow_html=True)
 st.markdown(
     """
-    <div class="activity-library-to-schedule">
-      <div class="flow-panel">
-        <div class="flow-panel-title">Forecasted activity mix</div>
-        <div class="activity-library">
-          <div class="activity-token">Ground pallet putaway</div>
-          <div class="activity-token">High-rack pallet placement</div>
-          <div class="activity-token">Case replenishment</div>
-          <div class="activity-token">Manual pallet transfer</div>
-          <div class="activity-token">Dock staging</div>
+    <div class="twin-process">
+      <div class="process-card"><div class="process-num">01 · MAP</div><h3>Map the operation</h3><p>Capture the layout, work areas, equipment, people, and movement paths.</p></div>
+      <div class="process-card"><div class="process-num">02 · MODEL</div><h3>Connect the data</h3><p>Bring in demand, staffing, throughput, travel, and process information.</p></div>
+      <div class="process-card"><div class="process-num">03 · VALIDATE</div><h3>Match reality</h3><p>Validate the model against what is happening on the floor before using it for decisions.</p></div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown('<section class="landing-section"><div class="landing-label">See the waste</div><h2 class="landing-heading">Make delay, travel, and imbalance visible.</h2><p class="landing-section-copy">The twin turns day-to-day movement into a clear view of where time and capacity are being lost.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="insight-board">
+      <div class="insight-head"><div><div class="insight-eyebrow">Operational view</div><div class="insight-title">Where the operation is slowing down</div></div><div class="illustrative-tag">Illustrative dashboard</div></div>
+      <div class="insight-body">
+        <div class="floor-view">
+          <div class="dock-bays"></div><div class="floor-zone receiving">Receiving</div><div class="floor-zone storage">Reserve storage</div><div class="floor-zone shipping">Shipping</div>
+          <div class="rack-field"><div class="rack-row"></div><div class="rack-row"></div><div class="rack-row"></div><div class="rack-row"></div><div class="rack-row"></div></div>
+          <div class="route one"></div><div class="route two"></div><div class="route three"></div><div class="heat one"></div><div class="heat two"></div><div class="heat three"></div>
+          <div class="floor-pin queue"><i></i>Queue build-up</div><div class="floor-pin travel"><i></i>Excess travel</div><div class="floor-pin delay"><i></i>Delay point</div>
         </div>
-      </div>
-      <div class="activity-flow-arrow">→</div>
-      <div class="flow-panel">
-        <div class="flow-panel-title">15-minute workload schedule</div>
-        <div class="schedule-note">Forecast by activity and task conditions, not just high-level volume.</div>
-        <div class="schedule-15">
-          <div class="row-name">Putaway</div><div class="empty"></div><div class="work-blue"></div><div class="work-blue"></div><div class="work-blue"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
-          <div class="row-name">Replenish</div><div class="empty"></div><div class="empty"></div><div class="work-mint"></div><div class="work-mint"></div><div class="work-mint"></div><div class="work-mint"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
-          <div class="row-name">Shipping</div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div><div class="work-orange"></div><div class="work-orange"></div><div class="work-orange"></div><div class="work-orange"></div><div class="empty"></div><div class="empty"></div><div class="empty"></div>
-        </div>
-        <div class="interval-caption"><span>Start</span><span>15-minute intervals</span><span>Peak</span></div>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">03</span> Turn workload into deployment</div><h2 class="step-title">Know who to deploy, to what work, and where.</h2><p class="step-copy">The operating plan brings the task-specific workload together with roles, zones, equipment, and interval-level demand.</p></section>', unsafe_allow_html=True)
-st.markdown(
-    """
-    <div class="staffing-board">
-      <div class="staffing-intro"><div class="staffing-intro-mark">→</div><div><strong>Workload plan → deployment plan</strong><span>Placeholder for the actual staffing logic and recommended assignments.</span></div></div>
-      <div class="staffing-output">
-        <div class="staffing-card"><label>Who</label><strong>Right role</strong><span>Forklift operator, picker, dock associate, lead</span></div>
-        <div class="staffing-card"><label>What</label><strong>Right activity</strong><span>Putaway, replenishment, picking, staging</span></div>
-        <div class="staffing-card"><label>Where</label><strong>Right location</strong><span>Dock, reserve, pick face, consolidation zone</span></div>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">04</span> See where labor time goes</div><h2 class="step-title">Make travel, handling, waiting, and idle time visible.</h2><p class="step-copy">The model does not only report total labor. It explains what is consuming time, so the operation can improve the work itself.</p></section>', unsafe_allow_html=True)
-st.markdown(
-    """
-    <div class="time-spend">
-      <div class="time-spend-copy"><strong>Labor content becomes diagnosable.</strong><p>Placeholder for measured or simulated time allocation by activity, role, zone, and shift.</p></div>
-      <div class="time-bars">
-        <div class="time-bar"><label>Travel</label><div class="time-track"><div class="time-fill" style="width:78%"></div></div></div>
-        <div class="time-bar"><label>Handle</label><div class="time-track"><div class="time-fill mint" style="width:56%"></div></div></div>
-        <div class="time-bar"><label>Place</label><div class="time-track"><div class="time-fill orange" style="width:43%"></div></div></div>
-        <div class="time-bar"><label>Waiting</label><div class="time-track"><div class="time-fill purple" style="width:29%"></div></div></div>
-        <div class="time-bar"><label>Idle</label><div class="time-track"><div class="time-fill gray" style="width:18%"></div></div></div>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-st.markdown('<section class="story-step"><div class="step-line"><span class="step-number">05</span> Test the operating system</div><h2 class="step-title">Digital-twin dashboard placeholder.</h2><p class="step-copy">This is where the final simulation model, scenarios, and operating decisions will live.</p></section>', unsafe_allow_html=True)
-st.markdown(
-    """
-    <div class="dashboard-shell">
-      <div class="dashboard-top">
-        <div><div class="dashboard-label">Digital twin scenario workspace</div><div class="dashboard-title">Test the plan before the floor has to live with it.</div></div>
-        <div class="status-pill">DASHBOARD PLACEHOLDER</div>
-      </div>
-      <div class="dashboard-grid">
-        <div class="simulation-pane"><span class="sim-flow one"></span><span class="sim-flow two"></span><span class="sim-node a"></span><span class="sim-node b"></span><span class="sim-node c"></span></div>
-        <div class="dashboard-metrics">
-          <div class="dashboard-metric"><div class="metric-label">Labor</div><div class="metric-value">Staffing plan</div><div class="metric-sub">By interval and zone</div></div>
-          <div class="dashboard-metric"><div class="metric-label">Throughput</div><div class="metric-value">Flow capacity</div><div class="metric-sub">By task and route</div></div>
-          <div class="dashboard-metric"><div class="metric-label">Flexibility</div><div class="metric-value">Scenario range</div><div class="metric-sub">Test alternative rules</div></div>
-          <div class="dashboard-metric"><div class="metric-label">Layout</div><div class="metric-value">Operating design</div><div class="metric-sub">Evaluate change safely</div></div>
+        <div class="insight-stack">
+          <div class="insight-card"><small>Heat map</small><strong>Where work concentrates</strong><span>See high-activity and congested areas across the floor.</span></div>
+          <div class="insight-card"><small>Delays</small><strong>Where flow breaks down</strong><span>Trace queues and bottlenecks back to their source.</span></div>
+          <div class="insight-card"><small>Labor balance</small><strong>Where capacity is misaligned</strong><span>Compare the work arriving with the people and equipment available.</span></div>
         </div>
       </div>
     </div>
@@ -2511,6 +2454,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+st.markdown('<section class="landing-section"><div class="landing-label">Plan of action</div><h2 class="landing-heading">Use the model to improve the real operation.</h2><p class="landing-section-copy">Test decisions before putting them on the floor, then turn the result into a practical operating plan.</p></section>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="action-grid">
+      <div class="action-card"><div class="action-icon">01</div><h3>Schedule people</h3><p>Align labor to the work, location, and time it is actually needed.</p></div>
+      <div class="action-card"><div class="action-icon">02</div><h3>Scale operations</h3><p>Test new volume, shifts, equipment, staffing, and layout alternatives safely.</p></div>
+      <div class="action-card"><div class="action-icon">03</div><h3>See cost reduction</h3><p>Compare scenarios and make the operational tradeoffs visible before investing.</p></div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+st.markdown('<div class="closing-line">Right person. Right time. Right place.</div>', unsafe_allow_html=True)
 
 st.stop()
 

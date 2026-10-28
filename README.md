@@ -1,15 +1,15 @@
-# Labor Standards Story
+# Data-Driven Decisions
 
-A fixed, top-to-bottom Streamlit visual story explaining why generic PPH is not a labor standard, how MOST makes work measurable, and how a digital twin supports better labor, flow, and layout decisions.
+A fixed, top-to-bottom Streamlit introduction to a distribution-center digital twin. It shows how a model can make labor, flow, bottlenecks, delays, and operating decisions visible.
 
 The app intentionally contains no visitor controls, financial claims, or client results.
 
 ## Included
 
-- Hero browser-based animated warehouse digital-twin visual
-- Short-route versus complex-route pallet infographic
-- MOST to standard library to workload forecast visual flow
-- Digital-twin scenarios for labor, work, and layout
+- Simio-style warehouse hero visual
+- Simple map → model → validate explanation
+- Clean operational dashboard illustration with heat, delay, and labor-balance views
+- Practical action areas: scheduling, scaling, and cost comparison
 
 ## Run locally
 
